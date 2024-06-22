@@ -9,19 +9,6 @@ export const PageContainer = styled.div`
   box-sizing: border-box;
   background-color: #fff; /* White background */
 `;
-
-export const OptionsBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  background-color: #282c34;
-  color: white;
-  height: 60px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-`;
-
 export const TaskInfoContainer = styled.div`
   display: flex;
   flex-direction: row;

@@ -6,7 +6,7 @@ import Flow from '../../components/Flow/Flow';
 import AddCardPopover from '../../components/AddCardPopover/AddCardPopover';
 import Navbar from '../../components/Navbar/Navbar';
 import { Node, Edge } from 'react-flow-renderer';
-import { OptionsBar, TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
+import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 
 const edgeOptions = {
