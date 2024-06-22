@@ -69,7 +69,7 @@ ComposableGenAi/
      - **For Windows:**
        - Follow the instructions to install Docker Desktop from the [official Docker website](https://docs.docker.com/desktop/windows/install/).
 
-2. **Open the Docker application (Docker Desktop) if using macOS or Windows.**
+2. **Open the Docker application (Docker Desktop) if using macOS or Windows. (Just needs to run in the background).**
 
 3. **Navigate to the backend directory:**
 
