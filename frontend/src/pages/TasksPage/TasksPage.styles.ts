@@ -5,74 +5,83 @@ export const TasksPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff; /* White background for the rest of the page */
+  background-color: #fff;
   min-height: 100vh;
-  padding: 0 20px;
-`;
-
-export const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  margin-top: 100px;  /* Adjusting margin to account for taller navbar */
-  width: 100%;  /* Ensure main content takes full width */
+  padding-top: 77px; /* Adjust padding to account for navbar height */
   box-sizing: border-box;
-  background-color: #fff; /* White background for the list */
-  padding: 20px;
-`;
-
-export const TaskList = styled.div`
-  width: 83.33%;  /* Ensure list items occupy 5/6 of the page width */
-  background-color: #fff; /* White background for the list */
-  padding: 20px;
-  
-`;
-
-export const TaskItem = styled.div`
-  background: #fff;
-  border-radius: 10px;
-  padding: 16px;
-  margin: 16px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 2px solid #333; /* Black stroke */
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #333;
-  }
-
-  p {
-    margin: 0.5rem 0;
-    font-size: 1rem;
-    color: #666;
-  }
-
-  /* Adding yellowish color to an element */
-  .highlight {
-    color: orange;
-  }
+  position: relative;
 `;
 
 export const Title = styled.h1`
   font-size: 2rem;
-  color: #333; /* Dark grey text */
-  margin-bottom: 20px;
-  margin-top: 20px;
+  color: #333;
+  margin: 0;
+  position: fixed;
+  top: 77px; /* Adjust to be just below the navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 900;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
 `;
 
 export const Subtitle = styled.p`
   font-size: 1.2rem;
-  color: #666; /* Light grey text */
-  margin-bottom: 20px;
+  color: #666;
+  margin-top: 40px; /* Adjust to provide space below the title */
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
+export const TaskList = styled.div`
+  width: 100%;
+  max-width: 800px;
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin-top: 60px; /* Adjust to provide space for title */
+  margin-bottom: 20px; /* Ensure enough space for footer and button */
+  max-height: calc(100vh - 220px); /* Adjust this value to keep space for footer */
+
+  /* Hide scrollbar for Webkit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for other browsers */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+`;
+
+
+
+export const Button = styled.button`
+  padding: 16px 32px;
+  background-color: orange;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  color: black;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #e08e0b;
+    transform: translateY(-2px);
+  }
+`;
+
+export const Footer = styled.div`
+  width: 100%;
+  position: fixed;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  z-index: 900;
 `;

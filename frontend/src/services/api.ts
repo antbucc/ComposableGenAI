@@ -101,3 +101,13 @@ export const updateCard = async (card: any) => {
         throw error;
     }
 };
+
+export const createTask = async (task: any) => {
+    try {
+        const response = await axios.post(`${API_URL}/tasks`, task);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating task:', error);
+        throw error;
+    }
+};

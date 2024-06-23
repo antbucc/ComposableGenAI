@@ -6,6 +6,7 @@ ComposableGenAi is a project designed to utilize generative AIs for general task
 
 - [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)
+  - [Visual Studio Code Setup](#visual-studio-code-setup)
   - [Backend Setup](#backend-setup)
   - [Frontend Setup](#frontend-setup)
 - [Usage](#usage)
@@ -27,13 +28,29 @@ ComposableGenAi/
 │ ├── src/
 │ ├── package.json
 │ └── ... (other frontend files)
-└── .gitignore
+├── .gitignore
+└── README.md
 
 ```
 
 ---
 
 ## Setup Instructions
+
+### Visual Studio Code Setup
+
+1. **Install Visual Studio Code:**
+
+   - **Download and install Visual Studio Code from the [official website](https://code.visualstudio.com/Download).**
+
+2. **Clone the repository using Visual Studio Code:**
+
+   - Open Visual Studio Code.
+   - Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
+   - Type `Git: Clone` and select `Git: Clone`.
+   - Enter the repository URL: `https://github.com/antbucc/ComposableGenAI`.
+   - Select the local directory where you want to clone the repository.
+   - Open the cloned repository in Visual Studio Code.
 
 ### Backend Setup
 

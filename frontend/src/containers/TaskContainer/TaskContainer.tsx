@@ -8,10 +8,14 @@ interface Task {
   _id: string;
   name: string;
   objective: string;
-  cards: any[]; // Replace `any` with the appropriate type if available
+  cards: any[];
 }
 
-const TaskContainer: React.FC = () => {
+interface TaskContainerProps {
+  refresh: boolean;
+}
+
+const TaskContainer: React.FC<TaskContainerProps> = ({ refresh }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -30,7 +34,7 @@ const TaskContainer: React.FC = () => {
     };
 
     getTasks();
-  }, []);
+  }, [refresh]); // Refetch tasks when `refresh` prop changes
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
