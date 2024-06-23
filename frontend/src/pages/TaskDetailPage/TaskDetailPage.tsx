@@ -8,6 +8,8 @@ import Navbar from '../../components/Navbar/Navbar';
 import { Node, Edge } from 'react-flow-renderer';
 import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
+import { ReactComponent as AddIcon } from '../../assets/add.svg';
+
 
 const edgeOptions = {
   animated: true,
@@ -156,7 +158,9 @@ const TaskDetailPage: React.FC = () => {
           </TaskInfo>
         </TaskInfoBox>
         <ButtonsBox>
-          <RoundButton onClick={() => setIsPopoverOpen(true)}>+</RoundButton>
+          <RoundButton onClick={() => setIsPopoverOpen(true)}>
+          <AddIcon className="icon" /> {/* Use the imported SVG component */}
+        </RoundButton>
         </ButtonsBox>
       </TaskInfoContainer>
       <ContentContainer>

@@ -47,7 +47,7 @@ export const TaskList = styled.div`
   border-radius: 8px;
   margin-top: 60px; /* Adjust to provide space for title */
   margin-bottom: 20px; /* Ensure enough space for footer and button */
-  max-height: calc(100vh - 220px); /* Adjust this value to keep space for footer */
+  max-height: calc(100vh - 140px); /* Adjust this value to keep space for footer */
 
   /* Hide scrollbar for Webkit browsers */
   &::-webkit-scrollbar {
@@ -59,21 +59,79 @@ export const TaskList = styled.div`
   scrollbar-width: none;  /* Firefox */
 `;
 
+export const TaskItem = styled.div`
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 12px 0;  /* Adjust this value to change spacing between items */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid #333;
 
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
 
-export const Button = styled.button`
-  padding: 16px 32px;
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .highlight {
+    color: orange;
+  }
+`;
+
+export const ButtonsBox = styled.div`
+  position: absolute;
+  top: 75px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  border-bottom-left-radius: 20px;
+  padding: 10px;
+  width: auto; /* Adjust width as needed */
+  box-shadow: inset 0 -3px 0 0 orange, inset 3px 0 0 0 orange, 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  z-index: 1000; /* Ensure it is above other elements */
+`;
+
+export const RoundButton = styled.button`
   background-color: orange;
   border: 2px solid black;
-  border-radius: 5px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 18px;
   color: black;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
     background-color: #e08e0b;
-    transform: translateY(-2px);
+  }
+
+  .icon {
+    fill: black; /* Ensure the SVG icon is black */
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
   }
 `;
 

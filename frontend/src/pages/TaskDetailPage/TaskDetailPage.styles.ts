@@ -84,6 +84,12 @@ export const RoundButton = styled.button`
   &:hover {
     background-color: #e08e0b;
   }
+
+  .icon {
+    fill: black; /* Ensure the SVG icon is black */
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+  }
 `;
 
 export const ContentContainer = styled.div`
