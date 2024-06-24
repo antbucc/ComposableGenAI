@@ -2,14 +2,11 @@
 
 import styled from 'styled-components';
 
-export const EdgeButton = styled.image`
+export const EdgeButton = styled.img`
   cursor: pointer;
   border: 2px solid black;
   border-radius: 50%;
   background-color: red;
-  &:hover {
-    background-color: darkred;
-  }
 `;
 
 export const PopoverContainer = styled.div`
