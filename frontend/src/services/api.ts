@@ -1,4 +1,5 @@
 // src/services/api.ts
+
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api'; // Adjust the base URL as needed
@@ -92,6 +93,7 @@ export const deleteCard = async (cardId: string) => {
         throw error;
     }
 };
+
 export const updateCard = async (card: any) => {
     try {
         const response = await axios.put(`${API_URL}/cards/${card._id}`, card);
@@ -108,6 +110,16 @@ export const createTask = async (task: any) => {
         return response.data;
     } catch (error) {
         console.error('Error creating task:', error);
+        throw error;
+    }
+};
+
+export const removeNextCard = async (currentCardId: string, nextCardId: string) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/remove-next/${currentCardId}`, { nextCardId });
+        return response.data;
+    } catch (error) {
+        console.error('Error removing next card:', error);
         throw error;
     }
 };

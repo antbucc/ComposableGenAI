@@ -1,10 +1,23 @@
 // src/components/Flow/Flow.tsx
 
 import React, { useCallback, useEffect } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
+import ReactFlow, {
+  Background,
+  Controls,
+  MiniMap,
+  Node,
+  Edge,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Connection,
+  OnEdgesDelete,
+  OnConnect
+} from 'react-flow-renderer';
 import dagre from 'dagre';
-import { setNextCard } from '../../services/api';
+import { setNextCard, removeNextCard } from '../../services/api';
 import CardNode from './CardNode';
+import CardEdge from '../CardEdge/CardEdge'; // Import CardEdge
 import { FlowContainer } from './Flow.styles';
 
 interface FlowProps {
@@ -31,12 +44,16 @@ const nodeTypes = {
   cardNode: CardNode,
 };
 
+const edgeTypes = {
+  card: CardEdge,
+};
+
 const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, onExecute }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback(async (params: Edge | Connection) => {
-    const newEdge = { ...params, ...edgeOptions };
+  const onConnect: OnConnect = useCallback(async (params: Edge | Connection) => {
+    const newEdge = { ...params, ...edgeOptions, type: 'card', data: { onRemove: handleDeleteEdge } };
     setEdges((eds) => addEdge(newEdge, eds));
 
     const { source, target } = params;
@@ -80,15 +97,42 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
   };
 
+  const onEdgesDelete: OnEdgesDelete = useCallback(async (edgesToDelete: Edge[]) => {
+    for (const edge of edgesToDelete) {
+      const { source, target } = edge;
+      try {
+        await removeNextCard(source, target);
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+      } catch (error) {
+        console.error('Error removing edge:', error);
+      }
+    }
+  }, [setEdges]);
+
+  const handleDeleteEdge = async (id: string) => {
+    const edge = edges.find((e) => e.id === id);
+    if (edge) {
+      const { source, target } = edge;
+      try {
+        await removeNextCard(source, target);
+        setEdges((eds) => eds.filter((e) => e.id !== id));
+      } catch (error) {
+        console.error('Error removing edge:', error);
+      }
+    }
+  };
+
   return (
     <FlowContainer>
       <ReactFlow
         nodes={nodes}
-        edges={edges.map(edge => ({ ...edge, ...edgeOptions }))}
+        edges={edges.map(edge => ({ ...edge, ...edgeOptions, type: 'card', data: { onRemove: handleDeleteEdge } }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onEdgesDelete={onEdgesDelete} // Handle edge deletions
         onConnect={onConnect}
         onNodeClick={onNodeClick}
+        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         defaultZoom={0.8}
