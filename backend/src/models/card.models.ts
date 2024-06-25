@@ -1,5 +1,3 @@
-// src/models/card.models.ts
-
 import { Schema, model, Document, Types } from 'mongoose';
 import { ExecutionDataModel, ExecutionDataDocument } from './executionData.models';
 
@@ -61,7 +59,7 @@ cardSchema.methods.getFormattedDetails = async function () {
 
 cardSchema.methods.linkCard = async function (cardId: Types.ObjectId, direction: 'next' | 'previous') {
     const card = this as ICard;
-    const relatedCard = await CardModel.findById(cardId);
+    const relatedCard = await CardModel.findById(cardId).exec() as ICard | null;
     if (!relatedCard) throw new Error('Related card not found');
 
     if (direction === 'next' && !card.nextCards.includes(cardId)) {
@@ -82,7 +80,7 @@ cardSchema.methods.linkCard = async function (cardId: Types.ObjectId, direction:
 
 cardSchema.methods.unlinkCard = async function (cardId: Types.ObjectId, direction: 'next' | 'previous') {
     const card = this as ICard;
-    const relatedCard = await CardModel.findById(cardId);
+    const relatedCard = await CardModel.findById(cardId).exec() as ICard | null;
     if (!relatedCard) throw new Error('Related card not found');
 
     if (direction === 'next') {
@@ -102,7 +100,7 @@ cardSchema.methods.getPreviousCardsOutputs = async function () {
     const previousCardsOutputs: { [key: string]: string | null } = {};
 
     for (const prevCardId of card.previousCards) {
-        const prevCard = await CardModel.findById(prevCardId).populate('output');
+        const prevCard = await CardModel.findById(prevCardId).populate('output').exec() as ICard | null;
         if (prevCard && prevCard.output) {
             const output = await ExecutionDataModel.findById(prevCard.output);
             previousCardsOutputs[prevCardId.toString()] = output?.generatedText || null;
@@ -115,11 +113,11 @@ cardSchema.methods.getPreviousCardsOutputs = async function () {
 };
 
 export const propagateInconsistency = async (cardId: Types.ObjectId): Promise<void> => {
-    const card = await CardModel.findById(cardId);
+    const card = await CardModel.findById(cardId).exec() as ICard | null;
     if (!card) return;
 
     for (const nextCardId of card.nextCards) {
-        const nextCard = await CardModel.findById(nextCardId);
+        const nextCard = await CardModel.findById(nextCardId).exec() as ICard | null;
         if (nextCard && !nextCard.inconsistent) {
             nextCard.inconsistent = true;
             await nextCard.save();
@@ -148,13 +146,8 @@ cardSchema.pre('save', async function (next) {
         card.inconsistent = true;
     }
 
-    if (card.isModified('previousCards')) {
-        card.inconsistent = true;
-    }
-
     next();
 });
-
 
 cardSchema.post('save', async function () {
     const card = this as ICard;
@@ -162,31 +155,6 @@ cardSchema.post('save', async function () {
     if (card.isModified('inconsistent') && card.inconsistent) {
         await propagateInconsistency(card._id);
     }
-});
-
-// Middleware to handle automatic unlinking of cards
-cardSchema.pre('remove', async function (next) {
-    const card = this as unknown as ICard;
-
-    // Remove this card from the previous cards' nextCards
-    for (const prevCardId of card.previousCards) {
-        const prevCard = await CardModel.findById(prevCardId);
-        if (prevCard) {
-            prevCard.nextCards = prevCard.nextCards.filter(id => !id.equals(card._id));
-            await prevCard.save();
-        }
-    }
-
-    // Remove this card from the next cards' previousCards
-    for (const nextCardId of card.nextCards) {
-        const nextCard = await CardModel.findById(nextCardId);
-        if (nextCard) {
-            nextCard.previousCards = nextCard.previousCards.filter(id => !id.equals(card._id));
-            await nextCard.save();
-        }
-    }
-
-    next();
 });
 
 export const CardModel = model<ICard>('Card', cardSchema);

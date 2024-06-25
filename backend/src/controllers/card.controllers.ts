@@ -49,13 +49,13 @@ const evaluateAndSaveCard = async (card: ICard, executionData: ExecutionDataDocu
 };
 
 export const createCard = async (req: Request<{}, any, CreateCardBody>, res: Response, next: NextFunction) => {
-    const { previousCards = [], taskId, ...card } = req.body;
+    const { taskId, ...card } = req.body;
     const { execute = 'false', evaluate = execute } = req.query;
 
     try {
         const newCard = new CardModel({
             ...card,
-            previousCards: previousCards.map(id => new Types.ObjectId(id)),
+            previousCards: [],
             nextCards: [],
             output: null,
             executed: false,
@@ -70,13 +70,6 @@ export const createCard = async (req: Request<{}, any, CreateCardBody>, res: Res
             if (task) {
                 task.cards.push(newCard._id);
                 await task.save();
-            }
-        }
-
-        for (const previousCardId of previousCards) {
-            const previousCard = await CardModel.findById(previousCardId);
-            if (previousCard) {
-                await previousCard.linkCard(new Types.ObjectId(newCard._id), 'next');
             }
         }
 
@@ -188,6 +181,7 @@ export const setPreviousCard = async (req: Request<{ currentCardId: string }, an
     }
 };
 
+
 export const removeNextCard = async (req: Request<{ currentCardId: string }, any, { nextCardId: string }>, res: Response, next: NextFunction) => {
     const { currentCardId } = req.params;
     const { nextCardId } = req.body;
@@ -246,15 +240,34 @@ export const deleteCardById = async (req: Request<{ id: string }>, res: Response
     const { id } = req.params;
 
     try {
-        const card = await CardModel.findByIdAndDelete(new Types.ObjectId(id));
+        const card = await CardModel.findById(new Types.ObjectId(id));
         if (!card) {
             return res.status(404).json({ message: 'Card not found' });
         }
+
+        // Unlink from previous cards
+        for (const prevCardId of card.previousCards) {
+            const prevCard = await CardModel.findById(prevCardId);
+            if (prevCard) {
+                await prevCard.unlinkCard(card._id, 'next');
+            }
+        }
+
+        // Unlink from next cards
+        for (const nextCardId of card.nextCards) {
+            const nextCard = await CardModel.findById(nextCardId);
+            if (nextCard) {
+                await nextCard.unlinkCard(card._id, 'previous');
+            }
+        }
+
+        await CardModel.findByIdAndDelete(id);
         return res.status(204).end();
     } catch (err) {
         next(err);
     }
 };
+
 
 export const deleteAllCards = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -297,7 +310,8 @@ export const getPreviousCardsOutputsController = async (req: Request<{ id: strin
 
 export const updateCard = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { title, objective, prompt, context } = req.body;
+    const { title, objective, prompt, context, inconsistent } = req.body;
+    console.log()
 
     try {
         const card = await CardModel.findById(new Types.ObjectId(id));
@@ -310,6 +324,7 @@ export const updateCard = async (req: Request, res: Response) => {
         card.objective = objective;
         card.prompt = prompt;
         card.context = context;
+        card.inconsistent = inconsistent;
 
         await card.save();
 
