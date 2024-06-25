@@ -1,4 +1,5 @@
 // src/components/DraggablePopover/DraggablePopover.styles.ts
+
 import styled from 'styled-components';
 
 export const CloseButton = styled.button`
@@ -18,7 +19,7 @@ export const CloseButton = styled.button`
 export const PopoverContainer = styled.div`
   position: absolute;
   width: 28%;
-  height: 50vh;
+  height: 60vh;
   padding: 60px 20px 0 20px; /* Adjust padding to accommodate title */
   background: white;
   border: 1px solid #ccc;
@@ -57,9 +58,9 @@ export const ButtonContainer = styled.div`
   flex-shrink: 0; /* Ensure the button container does not shrink */
 `;
 
-
 export const Section = styled.div`
   margin-bottom: 10px;
+  position: relative; /* Make section relative to position buttons */
 `;
 
 export const SectionTitle = styled.div`
@@ -101,9 +102,6 @@ export const Label = styled.label`
 export const Value = styled.span`
   margin-left: 5px;
 `;
-
-
-
 
 interface ExecuteButtonProps {
   disabled?: boolean;
@@ -208,7 +206,7 @@ export const LoadingMessage = styled.p`
 export const EditButton = styled.button`
   position: absolute;
   top: 60px;
-  right: 10px;
+  right: 20px;
   background: orange;
   padding: 5px 10px;
   border: 2px solid black;
@@ -216,6 +214,7 @@ export const EditButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+  z-index: 3; 
 
   img {
     width: 15px;
@@ -232,7 +231,7 @@ export const EditButton = styled.button`
 export const ResolveButton = styled.button`
   position: absolute;
   top: 60px;
-  right: 60px;
+  right: 70px;
   background: orange;
   padding: 5px 10px;
   border: 2px solid black;
@@ -240,6 +239,7 @@ export const ResolveButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+  z-index: 3; 
 
   img {
     width: 15px;
@@ -268,4 +268,74 @@ export const TitleBand = styled.div`
   text-align: center;
   font-weight: bold;
   line-height: 40px;
+`;
+
+export const CopyButton = styled.button`
+  background: orange;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px; /* Add some space between the buttons */
+  position: relative;
+  top: -5px; /* Move up by 5px */
+  right: -7px; /* Move right by 5px */
+
+  img {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    filter: brightness(0); 
+  }
+
+  &:hover {
+    background: #ff8c00;
+  }
+`;
+
+export const ModalButton = styled.button`
+  background: orange;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px; /* Add some space between the buttons */
+  position: relative;
+  top: -5px; /* Move up by 5px */
+  right: -5px; /* Move right by 5px */
+
+  img {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    filter: brightness(0); 
+  }
+
+  &:hover {
+    background: #ff8c00;
+  }
+`;
+
+export const OutputSection = styled.div`
+
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2; /* Ensure buttons are above the output section */
+  top: -3px; /* Move up by 3px */
+  right: -5px; /* Move right by 5px */
 `;

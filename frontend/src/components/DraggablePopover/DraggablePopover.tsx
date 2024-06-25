@@ -18,13 +18,20 @@ import {
   LoadingMessage,
   EditButton,
   ResolveButton,
-  TitleBand
+  TitleBand,
+  CopyButton,
+  ModalButton,
+  OutputSection,
+  ButtonGroup
 } from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
 import editIcon from '../../assets/edit.svg';
 import doneIcon from '../../assets/done.svg';
 import reviewIcon from '../../assets/review.svg';
+import copyIcon from '../../assets/copy.svg';
+import openNewIcon from '../../assets/open_new.svg';
+import OutputDetailModal from '../OutputDetailModal/OutputDetailModal';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -52,6 +59,8 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [previousCardsOutputs, setPreviousCardsOutputs] = useState<{ [key: string]: string | null }>({});
   const [isEditing, setIsEditing] = useState(false);
   const [updatedCard, setUpdatedCard] = useState<any>({});
+  const [isCopying, setIsCopying] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const getCard = async () => {
@@ -157,6 +166,22 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     }
   };
 
+  const handleCopyClick = async () => {
+    if (card && card.output && card.output.generatedText) {
+      try {
+        await navigator.clipboard.writeText(card.output.generatedText);
+        setIsCopying(true);
+        setTimeout(() => setIsCopying(false), 2000);
+      } catch (error) {
+        console.error('Failed to copy text:', error);
+      }
+    }
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <Draggable bounds="parent">
       <PopoverContainer
@@ -251,23 +276,31 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   )}
                 </SectionContent>
               </Section>
-              <Section>
+              <OutputSection>
                 <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
                   Output {isOutputCollapsed ? '▼' : '▲'}
                 </SectionTitle>
-                <SectionContent isCollapsed={isOutputCollapsed}>
-                  <div>
-                    {card.output ? (
-                      <>
-                        <Label>Generated Text:</Label>
-                        <Value>{card.output.generatedText}</Value>
-                      </>
-                    ) : (
-                      <Value>No output generated yet</Value>
-                    )}
-                  </div>
-                </SectionContent>
-              </Section>
+                <ButtonGroup>
+                  <CopyButton onClick={handleCopyClick}>
+                    <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
+                  </CopyButton>
+                  <ModalButton onClick={toggleModal}>
+                    <img src={openNewIcon} alt="Open" />
+                  </ModalButton>
+                </ButtonGroup>
+              </OutputSection>
+              <SectionContent isCollapsed={isOutputCollapsed}>
+                <div>
+                  {card.output ? (
+                    <>
+                      <Label>Generated Text:</Label>
+                      <Value>{card.output.generatedText}</Value>
+                    </>
+                  ) : (
+                    <Value>No output generated yet</Value>
+                  )}
+                </div>
+              </SectionContent>
               {card.output && card.output.evaluationMetrics && (
                 <Section>
                   <h3>Evaluation Metrics</h3>
@@ -302,6 +335,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
               </EvaluateButton>
             </ButtonContainer>
           </>
+        )}
+        {isModalOpen && (
+          <OutputDetailModal output={card.output?.generatedText} onRequestClose={toggleModal} />
         )}
       </PopoverContainer>
     </Draggable>
