@@ -79,7 +79,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
-      node.data = { ...node.data, onExecute, onDelete };
+      node.data = { ...node.data, onExecute, onDelete }; // Add taskId here
       return node;
     });
 

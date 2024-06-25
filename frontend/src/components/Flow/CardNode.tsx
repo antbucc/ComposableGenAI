@@ -16,6 +16,7 @@ interface CardNodeProps {
     onExecute: (id: string) => void;
     onUpdate: (updatedCard: any) => void;
     onDelete: (id: string) => void; // Add onDelete function
+    taskId: string; // Add taskId property
   };
 }
 
@@ -40,7 +41,7 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     const confirmed = window.confirm('Are you sure you want to delete this card?');
     if (confirmed) {
       try {
-        await deleteCard(data.id);
+        await deleteCard(data.id, data.taskId);
         data.onDelete(data.id); // Notify the parent about the deletion
       } catch (error) {
         console.error('Error deleting card:', error);

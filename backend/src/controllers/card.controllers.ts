@@ -236,8 +236,9 @@ export const getCardsWithoutPopulate = async (req: Request, res: Response, next:
     }
 };
 
-export const deleteCardById = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+export const deleteCardById = async (req: Request<{ id: string }, any, { taskId?: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
+    const { taskId } = req.body;
 
     try {
         const card = await CardModel.findById(new Types.ObjectId(id));
@@ -261,12 +262,23 @@ export const deleteCardById = async (req: Request<{ id: string }>, res: Response
             }
         }
 
+        // Remove the card from its task if taskId is specified
+        if (taskId) {
+            const task = await TaskModel.findById(taskId);
+            if (task) {
+                task.cards = task.cards.filter(taskCardId => !taskCardId.equals(card._id));
+                await task.save();
+            }
+        }
+
         await CardModel.findByIdAndDelete(id);
         return res.status(204).end();
     } catch (err) {
         next(err);
     }
 };
+
+
 
 
 export const deleteAllCards = async (req: Request, res: Response, next: NextFunction) => {

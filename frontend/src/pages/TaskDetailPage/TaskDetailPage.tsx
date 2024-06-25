@@ -1,7 +1,8 @@
 // src/pages/TaskDetailPage/TaskDetailPage.tsx
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchTaskById, executeCard } from '../../services/api';
+import { fetchTaskById, executeCard, deleteCard } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
 import AddCardPopover from '../../components/AddCardPopover/AddCardPopover';
 import Navbar from '../../components/Navbar/Navbar';
@@ -9,7 +10,6 @@ import { Node, Edge } from 'react-flow-renderer';
 import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
-
 
 const edgeOptions = {
   animated: true,
@@ -43,6 +43,7 @@ const TaskDetailPage: React.FC = () => {
             onExecute: handleExecute,
             onDelete: handleDelete,
             onCardUpdate: handleCardUpdate,
+            taskId: data._id, // Pass taskId to each node
           },
           position: { x: 200 * index, y: 100 },
           type: 'cardNode',
@@ -139,9 +140,14 @@ const TaskDetailPage: React.FC = () => {
     );
   };
 
-  const handleDelete = (id: string) => {
-    setNodes((nds) => nds.filter((node) => node.id !== id));
-    setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+  const handleDelete = async (cardId: string) => {
+    try {
+      await deleteCard(cardId, task._id);
+      setNodes((nds) => nds.filter((node) => node.id !== cardId));
+      setEdges((eds) => eds.filter((edge) => edge.source !== cardId && edge.target !== cardId));
+    } catch (error) {
+      console.error('Error deleting card:', error);
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -159,8 +165,8 @@ const TaskDetailPage: React.FC = () => {
         </TaskInfoBox>
         <ButtonsBox>
           <RoundButton onClick={() => setIsPopoverOpen(true)}>
-          <AddIcon className="icon" /> {/* Use the imported SVG component */}
-        </RoundButton>
+            <AddIcon className="icon" /> {/* Use the imported SVG component */}
+          </RoundButton>
         </ButtonsBox>
       </TaskInfoContainer>
       <ContentContainer>

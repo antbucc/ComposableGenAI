@@ -84,9 +84,11 @@ export const evaluateCard = async (cardId: string) => {
     }
 };
 
-export const deleteCard = async (cardId: string) => {
+export const deleteCard = async (cardId: string, taskId?: string) => {
     try {
-        const response = await axios.delete(`${API_URL}/cards/${cardId}`);
+        const response = await axios.delete(`${API_URL}/cards/${cardId}`, {
+            data: { taskId }
+        });
         return response.data;
     } catch (error) {
         console.error(`Error deleting card with id ${cardId}:`, error);
