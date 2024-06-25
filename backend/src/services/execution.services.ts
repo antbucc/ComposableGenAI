@@ -1,16 +1,19 @@
 // src/services/execution.services.ts
 import { openai } from '../config/openai.client';
 import { ICard } from '../models/card.models'; // Import the Mongoose document type
-import { generatePrompt } from '../utils/prompt.utils';
+import { generateEnhancedPrompt, generatePrompt } from '../utils/prompt.utils';
+import { enhancePrompt } from './promptEnhancement.services';
 
 export const executeCard = async (
     card: ICard, // Use the Mongoose document type
 ): Promise<{ generatedText: string }> => {
     // Generate the prompt using the utility function
-    const fullPrompt = await generatePrompt(card._id);
-    console.log("Generated prompt:", fullPrompt);
+    let prompt = await generatePrompt(card._id);
+    //prompt = await enhancePrompt(prompt);
+    //prompt = await generateEnhancedPrompt(card._id);
+    console.log("Generated prompt:", prompt);
 
-    if (!fullPrompt) {
+    if (!prompt) {
         throw new Error("Failed to generate prompt. Cannot generate output.");
     }
 
@@ -24,7 +27,8 @@ export const executeCard = async (
                 },
                 {
                     role: 'user',
-                    content: fullPrompt
+                    content: prompt
+
                 }
             ],
             { maxTokens: 3750, temperature: 0.7 } // Options object
