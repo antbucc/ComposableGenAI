@@ -10,6 +10,7 @@ import { Node, Edge } from 'react-flow-renderer';
 import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
+import OutputDetailModal from '../../components/OutputDetailModal/OutputDetailModal';
 
 const edgeOptions = {
   animated: true,
@@ -26,6 +27,7 @@ const TaskDetailPage: React.FC = () => {
   const [openPopovers, setOpenPopovers] = useState<string[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [modalOutput, setModalOutput] = useState<string | null>(null);
 
   const fetchTaskData = async () => {
     if (id) {
@@ -150,6 +152,14 @@ const TaskDetailPage: React.FC = () => {
     }
   };
 
+  const handleOpenModal = (output: string) => {
+    setModalOutput(output);
+  };
+
+  const handleCloseModal = () => {
+    setModalOutput(null);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -165,7 +175,7 @@ const TaskDetailPage: React.FC = () => {
         </TaskInfoBox>
         <ButtonsBox>
           <RoundButton onClick={() => setIsPopoverOpen(true)}>
-            <AddIcon className="icon" /> {/* Use the imported SVG component */}
+            <AddIcon className="icon" />
           </RoundButton>
         </ButtonsBox>
       </TaskInfoContainer>
@@ -174,8 +184,19 @@ const TaskDetailPage: React.FC = () => {
       </ContentContainer>
       <AddCardPopover isOpen={isPopoverOpen} onRequestClose={() => setIsPopoverOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
       {openPopovers.map((cardId, index) => (
-        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} onExecute={handleExecute} onCardUpdate={handleCardUpdate} />
+        <DraggablePopover
+          key={cardId}
+          cardId={cardId}
+          onRequestClose={() => handleClosePopover(cardId)}
+          index={index}
+          onExecute={handleExecute}
+          onCardUpdate={handleCardUpdate}
+          onOpenModal={handleOpenModal} // Pass the handleOpenModal function
+        />
       ))}
+      {modalOutput && (
+        <OutputDetailModal output={modalOutput} onRequestClose={handleCloseModal} />
+      )}
     </PageContainer>
   );
 };

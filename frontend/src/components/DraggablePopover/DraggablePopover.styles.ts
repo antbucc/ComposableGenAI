@@ -25,7 +25,7 @@ export const PopoverContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+  z-index: 10;
   overflow: hidden;
   border: 2px solid #333;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

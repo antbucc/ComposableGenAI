@@ -19,10 +19,12 @@ export const ModalContainer = styled.div`
   background: white;
   border-radius: 10px;
   padding: 20px;
-  width: 80%;
-  max-width: 800px;
+  width: 90%; /* Increase the width */
+  height: 80vh; /* Increase the height */
+  max-width: 1200px; /* Increase the maximum width */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 12;
 `;
 
 export const ModalHeader = styled.div`
@@ -45,6 +47,8 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
+  position: relative;
+  top: -5px; /* Move up by 5px */
 
   &:hover {
     color: #ff0000;
@@ -52,7 +56,7 @@ export const CloseButton = styled.button`
 `;
 
 export const ModalContent = styled.div`
-  max-height: 60vh;
+  max-height: calc(80vh - 100px); /* Adjust max-height to fit within modal */
   overflow-y: auto;
   padding-right: 10px; /* For scrollbar space */
   -ms-overflow-style: none;  /* IE and Edge */
@@ -76,7 +80,9 @@ export const CopyButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  position: absolute; /* Absolute positioning to place it at the top right */
+  top: 20px;
+  right: 70px; /* Move left by 50px to avoid overlap */
 
   img {
     width: 15px;

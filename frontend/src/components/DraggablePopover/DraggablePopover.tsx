@@ -24,14 +24,15 @@ import {
   OutputSection,
   ButtonGroup
 } from './DraggablePopover.styles';
-import executeIcon from '../../assets/execute.svg';
-import evaluateIcon from '../../assets/evaluate.svg';
-import editIcon from '../../assets/edit.svg';
-import doneIcon from '../../assets/done.svg';
-import reviewIcon from '../../assets/review.svg';
-import copyIcon from '../../assets/copy.svg';
-import openNewIcon from '../../assets/open_new.svg';
-import OutputDetailModal from '../OutputDetailModal/OutputDetailModal';
+import {
+  executeIcon,
+  evaluateIcon,
+  editIcon,
+  doneIcon,
+  reviewIcon,
+  copyIcon,
+  openNewIcon
+} from '../../assets';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -39,6 +40,7 @@ interface DraggablePopoverProps {
   index: number;
   onExecute: (id: string) => void;
   onCardUpdate: (card: any) => void;
+  onOpenModal: (output: string) => void; // Add a new prop for opening the modal
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
@@ -47,6 +49,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   index,
   onExecute,
   onCardUpdate,
+  onOpenModal // Destructure the new prop
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +63,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [updatedCard, setUpdatedCard] = useState<any>({});
   const [isCopying, setIsCopying] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const getCard = async () => {
@@ -178,9 +180,12 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     }
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const handleModalOpen = () => {
+    if (card && card.output && card.output.generatedText) {
+      onOpenModal(card.output.generatedText);
+    }
   };
+
 
   return (
     <Draggable bounds="parent">
@@ -284,7 +289,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   <CopyButton onClick={handleCopyClick}>
                     <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
                   </CopyButton>
-                  <ModalButton onClick={toggleModal}>
+                  <ModalButton onClick={handleModalOpen}>
                     <img src={openNewIcon} alt="Open" />
                   </ModalButton>
                 </ButtonGroup>
@@ -335,9 +340,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
               </EvaluateButton>
             </ButtonContainer>
           </>
-        )}
-        {isModalOpen && (
-          <OutputDetailModal output={card.output?.generatedText} onRequestClose={toggleModal} />
         )}
       </PopoverContainer>
     </Draggable>
