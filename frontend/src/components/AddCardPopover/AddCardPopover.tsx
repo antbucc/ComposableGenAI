@@ -59,7 +59,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
 
   return (
     <Draggable bounds="parent">
-      <FormContainer style={{ top: '10%', left: '10%' }}>
+      <FormContainer style={{ top: '0%', left: '10%' }}>
         <TitleBand>Create New Card</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <form onSubmit={handleSubmit}>
