@@ -11,6 +11,7 @@ import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, Cont
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
 import OutputDetailModal from '../../components/OutputDetailModal/OutputDetailModal';
+import InstructionsPopup from '../../components/InstructionsPopup/InstructionsPopup';
 
 const edgeOptions = {
   animated: true,
@@ -28,6 +29,7 @@ const TaskDetailPage: React.FC = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [modalOutput, setModalOutput] = useState<string | null>(null);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const fetchTaskData = async () => {
     if (id) {
@@ -73,6 +75,10 @@ const TaskDetailPage: React.FC = () => {
           });
         });
         setEdges(newEdges);
+
+        if (data.cards.length === 0) {
+          setShowInstructions(true);
+        }
       } catch (err) {
         setError('Failed to fetch task. Please try again later.');
       } finally {
@@ -89,6 +95,7 @@ const TaskDetailPage: React.FC = () => {
   }, [id]);
 
   const handleCardCreated = () => {
+    setIsPopoverOpen(false);
     fetchTaskData();
   };
 
@@ -147,6 +154,9 @@ const TaskDetailPage: React.FC = () => {
       await deleteCard(cardId, task._id);
       setNodes((nds) => nds.filter((node) => node.id !== cardId));
       setEdges((eds) => eds.filter((edge) => edge.source !== cardId && edge.target !== cardId));
+      if (nodes.length === 1) {
+        setShowInstructions(true);
+      }
     } catch (error) {
       console.error('Error deleting card:', error);
     }
@@ -158,6 +168,10 @@ const TaskDetailPage: React.FC = () => {
 
   const handleCloseModal = () => {
     setModalOutput(null);
+  };
+
+  const closeInstructions = () => {
+    setShowInstructions(false);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -197,6 +211,7 @@ const TaskDetailPage: React.FC = () => {
       {modalOutput && (
         <OutputDetailModal output={modalOutput} onRequestClose={handleCloseModal} />
       )}
+      {showInstructions && <InstructionsPopup onClose={closeInstructions} />}
     </PageContainer>
   );
 };
