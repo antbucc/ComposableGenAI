@@ -52,10 +52,12 @@ const TasksPage: React.FC = () => {
       <Title>Tasks</Title>
       {tasks.length === 0 || showInfo ? (
         <TaskList>
+          {tasks.length === 0 ? (
           <Section>
             <SectionTitle>No Tasks Available</SectionTitle>
             <SectionContent>To get started, click the &quot;+&quot; button on the right to create a new task.</SectionContent>
           </Section>
+          ) : null}
           <Section>
             <SectionTitle>Concept of Cards and Tasks</SectionTitle>
             <SectionContent>
