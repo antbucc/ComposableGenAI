@@ -28,14 +28,6 @@ export const Title = styled.h1`
   box-sizing: border-box;
 `;
 
-export const Subtitle = styled.p`
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 40px; /* Adjust to provide space below the title */
-  margin-bottom: 10px;
-  text-align: center;
-`;
-
 export const TaskList = styled.div`
   width: 100%;
   max-width: 800px;
@@ -123,6 +115,7 @@ export const RoundButton = styled.button`
   justify-content: center;
   font-size: 18px;
   color: black;
+  margin-bottom: 10px; /* Add space between the buttons */
 
   &:hover {
     background-color: #e08e0b;
@@ -135,6 +128,56 @@ export const RoundButton = styled.button`
   }
 `;
 
+export const ToggleButton = styled.button`
+  background-color: orange;
+  border: 2px solid black;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: black;
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  &:hover:enabled {
+    background-color: #e08e0b;
+  }
+
+  .icon {
+    fill: black; /* Ensure the SVG icon is black */
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+  }
+`;
+
+export const Section = styled.div`
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+export const SectionTitle = styled.h2`
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  color: #333;
+`;
+
+export const SectionContent = styled.div`
+  font-size: 1rem;
+  color: #666;
+`;
+
 export const Footer = styled.div`
   width: 100%;
   position: fixed;
@@ -142,4 +185,12 @@ export const Footer = styled.div`
   display: flex;
   justify-content: center;
   z-index: 900;
+`;
+
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 `;

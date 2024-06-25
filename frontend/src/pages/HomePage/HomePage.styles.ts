@@ -1,38 +1,49 @@
 // src/pages/HomePage/HomePage.styles.ts
 import styled from 'styled-components';
+import heroImage from '../../assets/heroimages/hero_image_2.webp';
 
 export const HomePageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff; /* White background */
+  background-image: url(${heroImage});
+  background-size: cover;
+  background-position: center;
+  width: 100%;
   height: 100vh;
-  padding: 0 20px;
+  margin-top: 40px; /* Add top margin to move the page down */
 `;
-
-
 
 export const MainContent = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  margin-top: 80px;  /* Adjusting margin to account for navbar height */
-  overflow: hidden;
-  width: 100%;  /* Ensure main content takes full width */
+  justify-content: space-between;
+  align-items: flex-start; /* Align items to the top */
+  width: 100%;
+  height: 80%;
   box-sizing: border-box;
+  padding: 20px;
+`;
+
+export const SideSection = styled.div`
+  width: 15%;
+  height: 75%;
+  background-color: rgba(255, 255, 255, 1); /* Light background for readability */
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 90px; /* Move the section up */
 `;
 
 export const Button = styled.button`
-  margin: 20px;
-  padding: 16px 32px; /* Bigger button */
-  background-color: orange; /* Button color */
-  border: 2px solid black; /* Added black stroke */
+  padding: 16px 32px;
+  margin: 0 20px;
+  background-color: orange;
+  border: 2px solid black;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px; /* Bigger font size */
-  color: black; /* Button text color */
+  font-size: 18px;
+  color: black;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
@@ -41,51 +52,51 @@ export const Button = styled.button`
   }
 `;
 
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+`;
+
 export const Title = styled.h1`
   font-size: 2.5rem;
-  color: #333; /* Dark grey text */
+  color: #fff; /* Change text color to white for better contrast */
   margin-bottom: 20px;
-`;
-
-export const Subtitle = styled.p`
-  font-size: 1.2rem;
-  color: #666; /* Light grey text */
-  margin-bottom: 40px;
-  text-align: center;
-`;
-
-export const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-  padding: 20px;
-  border: 2px solid black; /* Added black stroke */
-  border-radius: 5px;
-  background-color: #f9f9f9; /* Light grey background for sections */
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 80%;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 export const SectionTitle = styled.h2`
   font-size: 1.8rem;
-  color: #333; /* Dark grey text */
+  color: #333;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export const SectionContent = styled.p`
   font-size: 1rem;
-  color: black; /* Light grey text */
-  text-align: center;
+  color: black;
+  text-align: left;
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 export const Footer = styled.div`
   width: 100%;
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
+  @media (max-width: 768px) {
+    bottom: 10px;
+    padding-right: 10px;
+  }
 `;

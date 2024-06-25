@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
-import { HomePageContainer, MainContent, Button, Title, Subtitle, Section, SectionTitle, SectionContent, Footer } from './HomePage.styles';
+import { HomePageContainer, MainContent, SideSection, Button, SectionTitle, SectionContent, Footer, ButtonContainer } from './HomePage.styles';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -11,25 +11,28 @@ const HomePage: React.FC = () => {
     <HomePageContainer>
       <Navbar />
       <MainContent>
-        <Title>Welcome to the Task Management System</Title>
-        <Subtitle>Select an option to get started</Subtitle>
-        <Section>
-          <SectionTitle>Task Flows</SectionTitle>
+        <SideSection>
+          <SectionTitle>Generative AI for Everyone</SectionTitle>
           <SectionContent>
-            Manage your tasks effectively with our intuitive task flows. Create, execute, and evaluate tasks seamlessly.
+            This application demonstrates the power of Generative Artificial Intelligence (AI) as described in the article. It allows users to specify desired outcomes through detailed prompts instead of traditional commands, making AI accessible to non-developers.
           </SectionContent>
-        </Section>
-        <Section>
-          <SectionTitle>Real-time Collaboration</SectionTitle>
+        </SideSection>
+        <SideSection>
+          <SectionTitle>The Card Model and Workflows</SectionTitle>
           <SectionContent>
-            Collaborate with your team in real-time. Share tasks, track progress, and achieve your goals together.
+            Utilizing the structured framework known as the &quot;Card Model,&quot; this application helps define and organize generative AI tasks. This approach outlines the structure, components, and relationships involved in generating content, providing a clear understanding of prompt engineering.
           </SectionContent>
-        </Section>
+        </SideSection>
       </MainContent>
       <Footer>
-        <Button onClick={() => navigate('/tasks')}>
-          View Tasks
-        </Button>
+        <ButtonContainer>
+          <Button onClick={() => window.open('https://techcommunity.microsoft.com/t5/educator-developer-blog/exploring-generative-ai-a-hands-on-course-on-prompt-engineering/ba-p/4148577', '_blank')}>
+            Read More
+          </Button>
+          <Button onClick={() => navigate('/tasks')}>
+            Get Started
+          </Button>
+        </ButtonContainer>
       </Footer>
     </HomePageContainer>
   );
