@@ -34,12 +34,6 @@ const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 dagreGraph.setGraph({ rankdir: 'LR', nodesep: 100, ranksep: 100 });
 
-const edgeOptions = {
-  animated: true,
-  style: { stroke: '#000' },
-  arrowHeadType: 'arrowclosed',
-};
-
 const nodeTypes = {
   cardNode: CardNode,
 };
@@ -53,7 +47,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect: OnConnect = useCallback(async (params: Edge | Connection) => {
-    const newEdge = { ...params, ...edgeOptions, type: 'card', data: { onRemove: handleDeleteEdge } };
+    const newEdge = { ...params, type: 'card', data: { onRemove: handleDeleteEdge } };
     setEdges((eds) => addEdge(newEdge, eds));
 
     const { source, target } = params;
@@ -126,7 +120,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     <FlowContainer>
       <ReactFlow
         nodes={nodes}
-        edges={edges.map(edge => ({ ...edge, ...edgeOptions, type: 'card', data: { onRemove: handleDeleteEdge } }))}
+        edges={edges.map(edge => ({ ...edge, type: 'card', data: { onRemove: handleDeleteEdge } }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onEdgesDelete={onEdgesDelete} // Handle edge deletions

@@ -1,4 +1,3 @@
-// src/containers/TaskContainer/TaskContainer.styles.ts
 import styled from 'styled-components';
 
 export const TaskContainerWrapper = styled.div`
@@ -12,11 +11,12 @@ export const TaskItem = styled.div`
   background: #fff;
   border-radius: 10px;
   padding: 16px;
-  margin: 8px 0;  /* Adjust this value to change spacing between items */
+  margin: 8px 0;
   width: 100%;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 2px solid #333;
+  position: relative; /* Ensure the delete button is positioned correctly */
 
   &:hover {
     transform: translateY(-5px);
@@ -33,5 +33,31 @@ export const TaskItem = styled.div`
     margin: 0.5rem 0;
     font-size: 1rem;
     color: #666;
+  }
+`;
+
+export const DeleteButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%); /* Center vertically */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;  /* Increase button size */
+  height: 40px; /* Increase button size */
+
+  svg {
+    fill: #ff0000;
+    width: 30px; /* Adjust icon size */
+    height: 30px; /* Adjust icon size */
+  }
+
+  &:hover svg {
+    fill: #cc0000;
   }
 `;

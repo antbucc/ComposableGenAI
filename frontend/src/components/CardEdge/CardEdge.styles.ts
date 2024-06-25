@@ -9,6 +9,11 @@ export const EdgeButton = styled.img`
   background-color: red;
 `;
 
+export const EdgePath = styled.path`
+  stroke: #000000;
+  stroke-width: 2;
+`;
+
 export const PopoverContainer = styled.div`
   position: absolute;
   background: white;

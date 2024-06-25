@@ -123,3 +123,13 @@ export const removeNextCard = async (currentCardId: string, nextCardId: string) 
         throw error;
     }
 };
+
+export const deleteTask = async (id: string) => {
+    try {
+        const response = await axios.delete(`${API_URL}/tasks/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting task with id ${id}:`, error);
+        throw error;
+    }
+};

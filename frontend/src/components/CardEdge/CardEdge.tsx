@@ -2,7 +2,7 @@
 
 import React, { MouseEvent } from 'react';
 import { EdgeProps, getBezierPath } from 'react-flow-renderer';
-import { EdgeButton } from './CardEdge.styles';
+import { EdgeButton, EdgePath } from './CardEdge.styles';
 import closeIcon from '../../assets/close.svg';
 
 const CardEdge = ({
@@ -33,7 +33,7 @@ const CardEdge = ({
 
   return (
     <>
-      <path id={id} className="react-flow__edge-path" d={edgePath} />
+      <EdgePath id={id} className="react-flow__edge-path" d={edgePath} />
       <foreignObject
         width={10}
         height={10}

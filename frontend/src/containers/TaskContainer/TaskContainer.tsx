@@ -1,8 +1,8 @@
-// src/containers/TaskContainer/TaskContainer.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchTasks } from '../../services/api';
-import { TaskContainerWrapper, TaskItem } from './TaskContainer.styles';
+import { fetchTasks, deleteTask } from '../../services/api';
+import { TaskContainerWrapper, TaskItem, DeleteButton } from './TaskContainer.styles';
+import { ReactComponent as DeleteIcon } from '../../assets/delete.svg'; // Import the delete icon
 
 interface Task {
   _id: string;
@@ -36,6 +36,15 @@ const TaskContainer: React.FC<TaskContainerProps> = ({ refresh }) => {
     getTasks();
   }, [refresh]); // Refetch tasks when `refresh` prop changes
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTask(id);
+      setTasks(tasks.filter(task => task._id !== id));
+    } catch (err) {
+      setError('Failed to delete task. Please try again later.');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -46,6 +55,9 @@ const TaskContainer: React.FC<TaskContainerProps> = ({ refresh }) => {
           <h2>{task.name}</h2>
           <p>{task.objective}</p>
           <p>Number of Cards: {task.cards.length}</p>
+          <DeleteButton onClick={(e) => { e.stopPropagation(); handleDelete(task._id); }}>
+            <DeleteIcon />
+          </DeleteButton>
         </TaskItem>
       ))}
     </TaskContainerWrapper>
