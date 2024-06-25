@@ -1,6 +1,5 @@
 // src/utils/prompt.utils.ts
 import { CardModel } from '../models/card.models';
-import { ExecutionDataModel } from '../models/executionData.models';
 
 /**
  * Generates a prompt for a generative AI task based on the provided card details.

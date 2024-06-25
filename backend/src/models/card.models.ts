@@ -45,16 +45,21 @@ cardSchema.methods.getFormattedDetails = async function () {
     const output = card.output ? await ExecutionDataModel.findById(card.output).exec() : null;
 
     const prompt = card.prompt;
-    const context = card.context;
-
+    let context = card.context || '';
     const previousCardsOutputs = await card.getPreviousCardsOutputs();
-    const contextWithPreviousOutputs = `${context}\n\n\n${Object.entries(previousCardsOutputs)
-        .map(([key, value]) => `${value}`)
-        .join('\n')}`;
+
+    if (!context && Object.keys(previousCardsOutputs).length === 0) {
+        context = 'No context';
+    } else {
+        const contextWithPreviousOutputs = `${context}\n\n\n${Object.entries(previousCardsOutputs)
+            .map(([key, value]) => `${value}`)
+            .join('\n')}`;
+        context = contextWithPreviousOutputs.trim();
+    }
 
     const answer = output ? output.generatedText : null;
 
-    return { answer, prompt, context: contextWithPreviousOutputs };
+    return { answer, prompt, context };
 };
 
 cardSchema.methods.linkCard = async function (cardId: Types.ObjectId, direction: 'next' | 'previous') {
