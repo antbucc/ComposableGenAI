@@ -17,15 +17,24 @@ type CreateCardBody = Omit<ICard, '_id'> & {
 };
 
 const executeAndSaveCard = async (card: ICard): Promise<ExecutionDataDocument> => {
+    // Delete the old output if it exists
+    if (card.output) {
+        await ExecutionDataModel.findByIdAndDelete(card.output);
+    }
+
+    // Execute the card and generate new output
     const { generatedText } = await executeCard(card);
     const executionData = new ExecutionDataModel({
         generatedText,
         evaluationMetrics: [],
     });
     await executionData.save();
+
+    // Update the card with the new output
     card.output = executionData._id;
     card.executed = true;
     await card.save();
+
     return executionData;
 };
 
@@ -92,6 +101,7 @@ export const createCard = async (req: Request<{}, any, CreateCardBody>, res: Res
 export const executeCardController = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { evaluate = 'true' } = req.query;
+
 
     try {
         const card = await CardModel.findById(new Types.ObjectId(id));

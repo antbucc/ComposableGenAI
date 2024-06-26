@@ -8,7 +8,7 @@ export const executeCard = async (
     card: ICard, // Use the Mongoose document type
 ): Promise<{ generatedText: string }> => {
     // Generate the prompt using the utility function
-    let prompt = await generatePrompt(card._id);
+    const prompt = await generatePrompt(card._id);
     //prompt = await enhancePrompt(prompt);
     //prompt = await generateEnhancedPrompt(card._id);
     console.log("Generated prompt:", prompt);

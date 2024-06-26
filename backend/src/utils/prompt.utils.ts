@@ -8,7 +8,7 @@ import { enhancePrompt } from '../services/promptEnhancement.services';
  * @param cardId - The ID of the card containing details of the task.
  * @returns The generated prompt string.
  */
-export async function generateEnhancedPrompt(cardId: string): Promise<string> {
+export async function generatePrompt(cardId: string): Promise<string> {
     // Fetch the card details
     const card = await CardModel.findById(cardId).exec();
 
@@ -18,18 +18,17 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
 
     const { prompt, context } = await card.getFormattedDetails();
 
-    // Fetch the execution data from previous cards
-
     // Construct the instructions
     const instructions = `
         ## Task
         **Objective:** ${card.objective}
 
-        ##Important
-        - Follow closely the instuctions of the prompt, do not praise this prompt.
+        ## Important
+        - Follow closely the instructions of the prompt. Do not praise this prompt, provide only the requested information.
+        - Avoid repeating the question or rephrasing the prompt. Directly address the task requirements.
 
         ## Instructions
-        - Provide a detailed and comprehensive response based on the task.
+        - Provide a detailed and comprehensive response based on the task. Do not include any detail on the task itself.
         - Ensure the response is relevant to the task and follows the given instructions closely.
         - The response should be complete and formatted correctly for display on the frontend.
         - Avoid repeating unnecessary information and focus on the key points.
@@ -58,7 +57,6 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
 
         ${contextSection}
 
-
         ## Note
         Ensure the answer is exhaustive and clear even without reading the context above. Provide any relevant citations if needed. Use Markdown format for better readability.
     `;
@@ -66,14 +64,13 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
     return structuredPrompt.trim();
 }
 
-
 /**
  * Generates a prompt for a generative AI task based on the provided card details.
  * 
  * @param cardId - The ID of the card containing details of the task.
  * @returns The generated prompt string.
  */
-export async function generatePrompt(cardId: string): Promise<string> {
+export async function generateEnhancedPrompt(cardId: string): Promise<string> {
     // Fetch the card details
     const card = await CardModel.findById(cardId).exec();
 
@@ -102,6 +99,7 @@ export async function generatePrompt(cardId: string): Promise<string> {
         - Ensure clarity in the answer.
         - Consider that the output may be used as the next card input and included in subsequent prompts.
         - Use bullet points, headings, and clear syntax to structure the response.
+        - Stick strictly to the request. Do not add any unnecessary or additional information. For example, if asked for a number between 2 and 30, simply provide a number like 5.
 
         ## Note
         Ensure the answer is exhaustive and clear even without reading the context above. Provide any relevant citations if needed. Use Markdown format for better readability.
@@ -123,6 +121,7 @@ export async function generatePrompt(cardId: string): Promise<string> {
         7. **Consistency**: Keep a consistent tone and style throughout.
         8. **Examples**: Provide examples or scenarios if they help clarify the prompt.
         9. **Brevity**: Be concise but thorough, avoiding unnecessary content.
+        10. **Adherence**: Stick strictly to the request. Do not add any unnecessary or additional information.
 
         Enhance the following prompt while adhering to these guidelines.
     `;
