@@ -29,7 +29,7 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '1mb' }));
 
 // Use morgan middleware to log requests
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+//app.use(morgan(':method :url :status :res[content-length]'));
 
 // Middleware to log the request path and body
 app.use((req, res, next) => {

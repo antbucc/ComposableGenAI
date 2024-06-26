@@ -133,7 +133,7 @@ export const propagateInconsistency = async (cardId: Types.ObjectId): Promise<vo
 cardSchema.pre('save', async function (next) {
     const card = this as ICard;
 
-    console.log('pre save');
+    //.log('pre save');
 
     if (card.isNew) {
         next();

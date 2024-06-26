@@ -110,7 +110,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       await executeCard(cardId);
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
-      onExecute(cardId);
       onCardUpdate(updatedCard);
     } catch (error) {
       console.error('Error executing card:', error);

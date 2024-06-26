@@ -15,7 +15,7 @@ export const enhancePrompt = async (prompt: string): Promise<string> => {
 
     try {
         const response = await openai.getChatCompletions(
-            process.env.MODEL_NAME || "gpt35Turbo", // Deployment name from environment variables
+            process.env.MODEL_NAME + "", // Deployment name from environment variables
             [
                 {
                     role: 'system',

@@ -11,7 +11,7 @@ export const executeCard = async (
     const prompt = await generatePrompt(card._id);
     //prompt = await enhancePrompt(prompt);
     //prompt = await generateEnhancedPrompt(card._id);
-    console.log("Generated prompt:", prompt);
+    //console.log("Generated prompt:", prompt);
 
     if (!prompt) {
         throw new Error("Failed to generate prompt. Cannot generate output.");
@@ -19,7 +19,7 @@ export const executeCard = async (
 
     try {
         const response = await openai.getChatCompletions(
-            process.env.MODEL_NAME || "gpt35Turbo", // Deployment name from environment variables
+            process.env.MODEL_NAME + "", // Deployment name from environment variables
             [
                 {
                     role: 'system',
