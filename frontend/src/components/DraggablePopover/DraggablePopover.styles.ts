@@ -268,7 +268,9 @@ export const TitleBand = styled.div`
   text-align: center;
   font-weight: bold;
   line-height: 40px;
+  cursor: pointer;
 `;
+
 
 export const CopyButton = styled.button`
   background: orange;

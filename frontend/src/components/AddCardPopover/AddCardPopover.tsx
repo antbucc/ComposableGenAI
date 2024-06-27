@@ -1,5 +1,3 @@
-// src/components/AddCardPopover/AddCardPopover.tsx
-
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import {
@@ -62,9 +60,9 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
   }
 
   return (
-    <Draggable bounds="parent">
+    <Draggable handle=".draggable-handle" bounds="parent">
       <FormContainer style={{ top: '10%', left: '10%' }}>
-        <TitleBand>Create New Card</TitleBand>
+        <TitleBand className="draggable-handle">Create New Card</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <form onSubmit={handleSubmit}>
           <FormLabel>

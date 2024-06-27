@@ -40,7 +40,7 @@ interface DraggablePopoverProps {
   index: number;
   onExecute: (id: string) => void;
   onCardUpdate: (card: any) => void;
-  onOpenModal: (output: string) => void; // Add a new prop for opening the modal
+  onOpenModal: (output: string) => void;
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
@@ -49,7 +49,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   index,
   onExecute,
   onCardUpdate,
-  onOpenModal // Destructure the new prop
+  onOpenModal
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -188,7 +188,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
 
 
   return (
-    <Draggable bounds="parent">
+    <Draggable handle=".draggable-handle" bounds="parent">
       <PopoverContainer
         style={{
           top: '25%',
@@ -196,7 +196,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
           transform: 'translateX(-50%)',
         }}
       >
-        <TitleBand>Card Details</TitleBand>
+        <TitleBand className="draggable-handle">Card Details</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <ResolveButton onClick={handleResolveInconsistency}>
           <img src={reviewIcon} alt="Resolve" />

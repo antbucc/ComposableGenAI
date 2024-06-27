@@ -47,9 +47,9 @@ const AddTaskPopover: React.FC<AddTaskPopoverProps> = ({
   }
 
   return (
-    <Draggable bounds="parent">
+    <Draggable handle=".draggable-handle" bounds="parent">
       <FormContainer style={{ top: '10%', left: '10%' }}>
-        <TitleBand>Create New Task</TitleBand>
+        <TitleBand className="draggable-handle">Create New Task</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <form onSubmit={handleSubmit}>
           <FormLabel>
