@@ -114,24 +114,6 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     }
   };
 
-  const handleCardUpdate = (updatedCard: any) => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === updatedCard._id) {
-          node.data = {
-            ...node.data,
-            title: updatedCard.title,
-            objective: updatedCard.objective,
-            prompt: updatedCard.prompt,
-            context: updatedCard.context,
-            executed: updatedCard.executed,
-            inconsistent: updatedCard.inconsistent,
-          };
-        }
-        return node;
-      })
-    );
-  };
 
   return (
     <FlowContainer>
