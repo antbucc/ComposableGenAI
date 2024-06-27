@@ -8,6 +8,7 @@ import { executeCard } from '../services/execution.services';
 import { evaluateCardOutput } from '../services/evaluation.services';
 import { EvaluationMetricType, EvaluationMetricDefinition } from '../types';
 import { Types } from 'mongoose';
+import { GenerativeModels } from '../types/GenerativeModels';
 
 type CreateCardBody = Omit<ICard, '_id'> & {
     execute?: boolean;
@@ -57,12 +58,18 @@ const evaluateAndSaveCard = async (card: ICard, executionData: ExecutionDataDocu
 };
 
 export const createCard = async (req: Request<{}, any, CreateCardBody>, res: Response, next: NextFunction) => {
-    const { taskId, ...card } = req.body;
+    const { taskId, generativeModel, ...card } = req.body;
     const { execute = 'false', evaluate = execute } = req.query;
+
+    // Validate generativeModel
+    if (!GenerativeModels.isValidModel(generativeModel.toString())) {
+        return res.status(400).json({ message: 'Invalid generative model' });
+    }
 
     try {
         const newCard = new CardModel({
             ...card,
+            generativeModel: generativeModel as keyof typeof GenerativeModels.ModelMapping, // Ensure correct type
             previousCards: [],
             nextCards: [],
             output: null,
@@ -331,7 +338,12 @@ export const getPreviousCardsOutputsController = async (req: Request<{ id: strin
 
 export const updateCard = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { title, objective, prompt, context, exampleOutput, inconsistent } = req.body;
+    const { title, objective, prompt, context, exampleOutput, generativeModel, inconsistent } = req.body;
+
+    // Validate generativeModel
+    if (!GenerativeModels.isValidModel(generativeModel)) {
+        return res.status(400).json({ message: 'Invalid generative model' });
+    }
 
     try {
         const card = await CardModel.findById(new Types.ObjectId(id));
@@ -339,13 +351,14 @@ export const updateCard = async (req: Request, res: Response) => {
         if (!card) {
             return res.status(404).json({ message: 'Card not found' });
         }
-        //keep it as it is because it is needed to detect card modifications
+
         card.title = title;
         card.objective = objective;
         card.prompt = prompt;
         card.context = context;
-        card.inconsistent = inconsistent;
         card.exampleOutput = exampleOutput;
+        card.generativeModel = generativeModel; // Include generativeModel field
+        card.inconsistent = inconsistent;
 
         await card.save();
 

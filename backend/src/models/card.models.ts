@@ -1,13 +1,15 @@
+// src/models/card.models.ts
 import { Schema, model, Document, Types } from 'mongoose';
 import { ExecutionDataModel, ExecutionDataDocument } from './executionData.models';
+import { GenerativeModels } from '../types/GenerativeModels';
 
 export interface ICard extends Document {
     title: string;
     objective: string;
     prompt: string;
-    generativeModel: string;
+    generativeModel: keyof typeof GenerativeModels.ModelMapping;
     context: string;
-    exampleOutput?: string; // Add this line
+    exampleOutput?: string;
     previousCards: Types.ObjectId[];
     nextCards: Types.ObjectId[];
     output: Types.ObjectId | ExecutionDataDocument | null;
@@ -27,9 +29,9 @@ const cardSchema = new Schema<ICard>(
         title: { type: String, required: true },
         objective: { type: String, required: true },
         prompt: { type: String, required: true },
-        generativeModel: { type: String, required: true },
+        generativeModel: { type: String, required: true, enum: Object.keys(GenerativeModels.ModelMapping) },
         context: { type: String, required: false },
-        exampleOutput: { type: String, required: false }, // Add this line
+        exampleOutput: { type: String, required: false },
         previousCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
         nextCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
         output: { type: Schema.Types.ObjectId, ref: 'ExecutionData', default: null },

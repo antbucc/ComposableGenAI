@@ -1,9 +1,17 @@
 // src/types/GenerativeModels.ts
-export enum GenerativeModels {
-    GPT_3 = 'gpt-3.5-turbo',
-    GPT_4 = 'gpt-4-turbo',
-    DALL_E = 'DALL_E',
-    WRITESONIC = 'WRITESONIC',
-    JASPER = 'JASPER',
-    GPT4O = 'gpt-4o',
+import { GPT_3_5_TURBO_MODEL_NAME, GPT_4_MODEL_NAME } from '../utils/secrets';
+
+export class GenerativeModels {
+    static readonly ModelMapping: { [key: string]: string } = {
+        GPT_3_5_TURBO: GPT_3_5_TURBO_MODEL_NAME,
+        GPT_4: GPT_4_MODEL_NAME
+    };
+
+    static isValidModel(model: string): boolean {
+        return model in GenerativeModels.ModelMapping;
+    }
+
+    static getModelName(model: string): string {
+        return GenerativeModels.ModelMapping[model];
+    }
 }

@@ -12,6 +12,7 @@ import {
   TitleBand,
 } from './AddCardPopover.styles';
 import { createCard } from '../../services/api';
+import { GENERATIVE_MODELS } from '../../config/config';
 
 interface AddCardPopoverProps {
   isOpen: boolean;
@@ -31,8 +32,8 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
   const [objective, setObjective] = useState('');
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
-  const [exampleOutput, setExampleOutput] = useState(''); // Add state for exampleOutput
-  const [generativeModel, setGenerativeModel] = useState('gpt35Turbo');
+  const [exampleOutput, setExampleOutput] = useState('');
+  const [generativeModel, setGenerativeModel] = useState(GENERATIVE_MODELS[0].value);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -43,7 +44,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
       generativeModel,
       prompt,
       context,
-      exampleOutput, // Include exampleOutput in the card creation
+      exampleOutput,
       taskId,
     };
 
@@ -77,8 +78,9 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
           <FormLabel>
             Generative Model:
             <FormInput as="select" value={generativeModel} onChange={(e) => setGenerativeModel(e.target.value)}>
-              <option value="gpt35Turbo">gpt35Turbo</option>
-              {/* Future options can be added here */}
+              {GENERATIVE_MODELS.map(model => (
+                <option key={model.value} value={model.value}>{model.label}</option>
+              ))}
             </FormInput>
           </FormLabel>
           <FormLabel>
@@ -90,7 +92,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
             <FormTextArea value={context} onChange={(e) => setContext(e.target.value)}></FormTextArea>
           </FormLabel>
           <FormLabel>
-            Example Output: {/* New input field for example output */}
+            Example Output:
             <FormTextArea value={exampleOutput} onChange={(e) => setExampleOutput(e.target.value)}></FormTextArea>
           </FormLabel>
           <FormButton type="submit">Create Card</FormButton>

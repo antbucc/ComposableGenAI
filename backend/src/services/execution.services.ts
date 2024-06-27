@@ -1,25 +1,27 @@
-// src/services/execution.services.ts
 import { openai } from '../config/openai.client';
 import { ICard } from '../models/card.models'; // Import the Mongoose document type
-import { generateEnhancedPrompt, generatePrompt } from '../utils/prompt.utils';
-import { enhancePrompt } from './promptEnhancement.services';
+import { generatePrompt } from '../utils/prompt.utils';
+import { GenerativeModels } from '../types/GenerativeModels';
 
 export const executeCard = async (
     card: ICard, // Use the Mongoose document type
 ): Promise<{ generatedText: string }> => {
     // Generate the prompt using the utility function
     const prompt = await generatePrompt(card._id);
-    //prompt = await enhancePrompt(prompt);
-    //prompt = await generateEnhancedPrompt(card._id);
-    //console.log("Generated prompt:", prompt);
 
     if (!prompt) {
         throw new Error("Failed to generate prompt. Cannot generate output.");
     }
 
+    // Validate and get the actual model name
+    if (!GenerativeModels.isValidModel(card.generativeModel as string)) {
+        throw new Error(`Unsupported generative model: ${card.generativeModel}`);
+    }
+    const modelName = GenerativeModels.getModelName(card.generativeModel as string);
+
     try {
         const response = await openai.getChatCompletions(
-            process.env.MODEL_NAME + "", // Deployment name from environment variables
+            modelName, // Use the actual model name
             [
                 {
                     role: 'system',
@@ -28,7 +30,6 @@ export const executeCard = async (
                 {
                     role: 'user',
                     content: prompt
-
                 }
             ],
             { maxTokens: 3750, temperature: 0.7 } // Options object
