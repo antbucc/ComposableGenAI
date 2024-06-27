@@ -19,9 +19,9 @@ export const ModalContainer = styled.div`
   background: white;
   border-radius: 10px;
   padding: 20px;
-  width: 90%; /* Increase the width */
-  height: 80vh; /* Increase the height */
-  max-width: 1200px; /* Increase the maximum width */
+  width: 90%;
+  height: 80vh;
+  max-width: 1200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 12;
@@ -47,8 +47,6 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-  position: relative;
-  top: -5px; /* Move up by 5px */
 
   &:hover {
     color: #ff0000;
@@ -56,19 +54,20 @@ export const CloseButton = styled.button`
 `;
 
 export const ModalContent = styled.div`
-  max-height: calc(80vh - 100px); /* Adjust max-height to fit within modal */
+  max-height: calc(80vh - 100px);
   overflow-y: auto;
-  padding-right: 10px; /* For scrollbar space */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  padding-right: 10px;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   &::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
+    display: none;
   }
 
   pre {
-    white-space: pre-wrap; /* Preserve whitespace and wrap lines */
-    word-wrap: break-word; /* Break long words */
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 `;
 
@@ -80,9 +79,9 @@ export const CopyButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
-  position: absolute; /* Absolute positioning to place it at the top right */
+  position: absolute;
   top: 20px;
-  right: 70px; /* Move left by 50px to avoid overlap */
+  right: 70px;
 
   img {
     width: 15px;
@@ -94,4 +93,28 @@ export const CopyButton = styled.button`
   &:hover {
     background: #ff8c00;
   }
+`;
+
+export const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ToggleButton = styled.button`
+  background: orange;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+
+  &:hover {
+    background: #ff8c00;
+  }
+`;
+
+export const InfoLabel = styled.p`
+  font-size: 14px;
+  color: #333;
+  margin: 0;
 `;

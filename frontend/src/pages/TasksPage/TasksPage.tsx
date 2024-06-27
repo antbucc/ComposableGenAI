@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import TaskContainer from '../../containers/TaskContainer/TaskContainer';
 import Navbar from '../../components/Navbar/Navbar';
-import { TasksPageContainer, TaskList, Title, ButtonsBox, RoundButton, Section, SectionTitle, SectionContent, Footer, ToggleButton } from './TasksPage.styles';
+import { TasksPageContainer, TaskList, Title, ButtonsBox, RoundButton, Section, SectionTitle, SectionContent, ToggleButton } from './TasksPage.styles';
 import AddTaskPopover from '../../components/AddTaskPopover/AddTaskPopover';
 import { ReactComponent as AddIcon } from '../../assets/add.svg'; // Import the SVG file
 import { ReactComponent as InfoIcon } from '../../assets/info.svg'; // Import the info SVG file

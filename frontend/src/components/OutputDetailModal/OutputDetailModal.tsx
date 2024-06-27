@@ -1,6 +1,7 @@
 // src/components/OutputDetailModal/OutputDetailModal.tsx
 
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import {
   ModalOverlay,
   ModalContainer,
@@ -8,10 +9,12 @@ import {
   ModalTitle,
   CloseButton,
   ModalContent,
-  CopyButton
+  CopyButton,
+  ToggleContainer,
+  ToggleButton,
+  InfoLabel
 } from './OutputDetailModal.styles';
-import copyIcon from '../../assets/copy.svg';
-import doneIcon from '../../assets/done.svg';
+import {copyIcon, doneIcon} from '../../assets';
 
 interface OutputDetailModalProps {
   output: string;
@@ -20,6 +23,7 @@ interface OutputDetailModalProps {
 
 const OutputDetailModal: React.FC<OutputDetailModalProps> = ({ output, onRequestClose }) => {
   const [isCopying, setIsCopying] = useState(false);
+  const [isMarkdown, setIsMarkdown] = useState(true);
 
   const handleCopyClick = async () => {
     try {
@@ -31,15 +35,25 @@ const OutputDetailModal: React.FC<OutputDetailModalProps> = ({ output, onRequest
     }
   };
 
+  const toggleDisplayMode = () => {
+    setIsMarkdown(!isMarkdown);
+  };
+
   return (
     <ModalOverlay>
       <ModalContainer>
         <ModalHeader>
           <ModalTitle>Output Details</ModalTitle>
+          <ToggleContainer>
+            <InfoLabel>If the output is not displayed correctly, click here to show it raw:</InfoLabel>
+            <ToggleButton onClick={toggleDisplayMode}>
+              {isMarkdown ? 'Show Raw' : 'Show Markdown'}
+            </ToggleButton>
+          </ToggleContainer>
           <CloseButton onClick={onRequestClose}>×</CloseButton>
         </ModalHeader>
         <ModalContent>
-          <pre>{output}</pre>
+          {isMarkdown ? <ReactMarkdown>{output}</ReactMarkdown> : <pre>{output}</pre>}
           <CopyButton onClick={handleCopyClick}>
             <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
           </CopyButton>
