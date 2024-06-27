@@ -1,5 +1,3 @@
-// src/components/Flow/Flow.tsx
-
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, {
   Background,
@@ -17,7 +15,7 @@ import ReactFlow, {
 import dagre from 'dagre';
 import { setNextCard, removeNextCard } from '../../services/api';
 import CardNode from './CardNode';
-import CardEdge from '../CardEdge/CardEdge'; // Import CardEdge
+import CardEdge from '../CardEdge/CardEdge';
 import { FlowContainer } from './Flow.styles';
 
 interface FlowProps {
@@ -79,7 +77,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
-      node.data = { ...node.data, onExecute, onDelete }; // Add taskId here
+      node.data = { ...node.data, onExecute, onDelete };
       return node;
     });
 
@@ -116,6 +114,25 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     }
   };
 
+  const handleCardUpdate = (updatedCard: any) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === updatedCard._id) {
+          node.data = {
+            ...node.data,
+            title: updatedCard.title,
+            objective: updatedCard.objective,
+            prompt: updatedCard.prompt,
+            context: updatedCard.context,
+            executed: updatedCard.executed,
+            inconsistent: updatedCard.inconsistent,
+          };
+        }
+        return node;
+      })
+    );
+  };
+
   return (
     <FlowContainer>
       <ReactFlow
@@ -123,7 +140,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         edges={edges.map(edge => ({ ...edge, type: 'card', data: { onRemove: handleDeleteEdge } }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onEdgesDelete={onEdgesDelete} // Handle edge deletions
+        onEdgesDelete={onEdgesDelete}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         edgeTypes={edgeTypes}

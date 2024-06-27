@@ -1,11 +1,20 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const CardContainer = styled.div`
-  padding: 16px 0 16px 16px; /* Adjust padding to fit the title band */
+  padding: 16px 0 16px 16px;
   border-color: black;
   margin: 16px;
   border-radius: 10px;
-  border: 2px solid black; /* Added black stroke */
+  border: 2px solid black;
   background-color: #fff;
   width: 200px;
   height: 120px;
@@ -37,9 +46,9 @@ export const StatusDot = styled.span<{ status: string }>`
   width: 20px;
   background-color: ${({ status }) => (status === 'executed' ? 'green' : 'red')};
   border-radius: 50%;
-  border: 2px solid black; /* Added black stroke */
+  border: 2px solid black;
   display: inline-block;
-  margin-left: 8px; /* Add margin to separate from button */
+  margin-left: 8px;
 `;
 
 export const StatusContainer = styled.div`
@@ -50,7 +59,7 @@ export const StatusContainer = styled.div`
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100px; /* Adjusted width for better spacing */
+  width: 100px;
 `;
 
 export const ExecuteButton = styled.button`
@@ -59,7 +68,7 @@ export const ExecuteButton = styled.button`
   justify-content: center;
   padding: 5px;
   background-color: green;
-  border: 2px solid black; /* Added black stroke */
+  border: 2px solid black;
   border-radius: 5px;
   cursor: pointer;
   position: relative;
@@ -94,11 +103,15 @@ export const ExecuteButton = styled.button`
   }
 `;
 
+export const LoadingIcon = styled.img`
+  animation: ${spin} 2s linear infinite;
+`;
+
 export const LoadingMessage = styled.p`
-  margin: 0 0 8px 0; /* Add margin to center the loading message */
+  margin: 0 0 8px 0;
   font-size: 14px;
   color: #000;
-  text-align: center; /* Center align the text */
+  text-align: center;
 `;
 
 export const CloseButton = styled.button`
@@ -122,6 +135,5 @@ export const WarningIcon = styled.img`
   left: 6px;
   width: 24px;
   height: 24px;
-  filter: brightness(0); /* Change the image color to black */
-
+  filter: brightness(0);
 `;
