@@ -9,16 +9,14 @@ import { enhancePrompt } from '../services/promptEnhancement.services';
  * @returns The generated prompt string.
  */
 export async function generatePrompt(cardId: string): Promise<string> {
-    // Fetch the card details
     const card = await CardModel.findById(cardId).exec();
 
     if (!card) {
         throw new Error('Card not found');
     }
 
-    const { prompt, context } = await card.getFormattedDetails();
+    const { prompt, context, exampleOutput } = await card.getFormattedDetails();
 
-    // Construct the instructions
     const instructions = `
         ## Task
         **Objective:** ${card.objective}
@@ -37,19 +35,22 @@ export async function generatePrompt(cardId: string): Promise<string> {
         - Use bullet points, headings, and clear syntax to structure the response.
     `;
 
-    // Construct the main prompt section
     const mainPromptSection = `
         ## Main Prompt
         ${prompt}
     `;
 
-    // Construct the context section
     const contextSection = `
         ## Context
         ${context}
     `;
 
-    // Combine all sections into the final structured prompt
+    const exampleOutputSection = exampleOutput ? `
+        ##Respond using this format and structure, nothing less, nothing more.Do not include any other additional information or explaination of the output.
+        ## Example Outputs
+        ${exampleOutput}
+    ` : '';
+
     const structuredPrompt = `
         ${instructions}
 
@@ -57,10 +58,14 @@ export async function generatePrompt(cardId: string): Promise<string> {
 
         ${contextSection}
 
-        ## Note
-        Ensure the answer is exhaustive and clear even without reading the context above. Provide any relevant citations if needed. Use Markdown format for better readability.
-    `;
+       
+        ${exampleOutputSection}
 
+        ## Note
+        Ensure the answer is exhaustive and clear even without reading the context above. Use Markdown format for better readability.
+        Do not include any expaination of the output or introduction of the answer.
+    `;
+    console.log(structuredPrompt);
     return structuredPrompt.trim();
 }
 

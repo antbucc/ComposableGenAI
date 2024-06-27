@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const FormContainer = styled.div`
   position: absolute;
   width: 30%;
+  height: 80%; /* Set height to 80% of the page */
   padding: 60px 20px 20px 20px; /* Add padding at the top to account for the title bar */
   background: #fff;
   box-sizing: border-box;
@@ -11,6 +12,15 @@ export const FormContainer = styled.div`
   border: 2px solid #333; /* Optional: border for better visibility */
   border-radius: 10px; /* Optional: rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
+
+  /* Hide scrollbar for Webkit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for other browsers */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 `;
 
 export const FormLabel = styled.label`

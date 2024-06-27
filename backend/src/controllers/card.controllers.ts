@@ -13,7 +13,6 @@ type CreateCardBody = Omit<ICard, '_id'> & {
     execute?: boolean;
     evaluate?: boolean;
     taskId?: string;
-    previousCards?: string[];
 };
 
 const executeAndSaveCard = async (card: ICard): Promise<ExecutionDataDocument> => {
@@ -69,7 +68,7 @@ export const createCard = async (req: Request<{}, any, CreateCardBody>, res: Res
             output: null,
             executed: false,
             evaluated: false,
-            inconsistentState: false
+            inconsistent: false,
         });
 
         await newCard.save();
@@ -332,8 +331,7 @@ export const getPreviousCardsOutputsController = async (req: Request<{ id: strin
 
 export const updateCard = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { title, objective, prompt, context, inconsistent } = req.body;
-    console.log()
+    const { title, objective, prompt, context, exampleOutput, inconsistent } = req.body;
 
     try {
         const card = await CardModel.findById(new Types.ObjectId(id));
@@ -347,6 +345,7 @@ export const updateCard = async (req: Request, res: Response) => {
         card.prompt = prompt;
         card.context = context;
         card.inconsistent = inconsistent;
+        card.exampleOutput = exampleOutput;
 
         await card.save();
 

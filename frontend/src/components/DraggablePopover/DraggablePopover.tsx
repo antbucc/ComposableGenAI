@@ -58,6 +58,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isPromptCollapsed, setIsPromptCollapsed] = useState(false);
   const [isContextCollapsed, setIsContextCollapsed] = useState(true);
+  const [isExampleOutputCollapsed, setIsExampleOutputCollapsed] = useState(true);
   const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
   const [previousCardsOutputs, setPreviousCardsOutputs] = useState<{ [key: string]: string | null }>({});
   const [isEditing, setIsEditing] = useState(false);
@@ -278,6 +279,24 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                       ))}
                     </div>
                   )}
+                  <Section>
+                    <SectionTitle onClick={() => setIsExampleOutputCollapsed(!isExampleOutputCollapsed)}>
+                      Example Output {isExampleOutputCollapsed ? '▼' : '▲'}
+                    </SectionTitle>
+                    <SectionContent isCollapsed={isExampleOutputCollapsed}>
+                      <div>
+                        {isEditing ? (
+                          <textarea
+                            name="exampleOutput"
+                            value={updatedCard.exampleOutput}
+                            onChange={handleChange}
+                          ></textarea>
+                        ) : (
+                          <Value>{card.exampleOutput || 'No example output provided'}</Value>
+                        )}
+                      </div>
+                    </SectionContent>
+                  </Section>
                 </SectionContent>
               </Section>
               <OutputSection>

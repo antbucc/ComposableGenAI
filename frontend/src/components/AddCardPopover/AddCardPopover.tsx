@@ -1,4 +1,5 @@
 // src/components/AddCardPopover/AddCardPopover.tsx
+
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import {
@@ -30,6 +31,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
   const [objective, setObjective] = useState('');
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
+  const [exampleOutput, setExampleOutput] = useState(''); // Add state for exampleOutput
   const [generativeModel, setGenerativeModel] = useState('gpt35Turbo');
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -41,6 +43,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
       generativeModel,
       prompt,
       context,
+      exampleOutput, // Include exampleOutput in the card creation
       taskId,
     };
 
@@ -59,7 +62,7 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
 
   return (
     <Draggable bounds="parent">
-      <FormContainer style={{ top: '0%', left: '10%' }}>
+      <FormContainer style={{ top: '10%', left: '10%' }}>
         <TitleBand>Create New Card</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <form onSubmit={handleSubmit}>
@@ -85,6 +88,10 @@ const AddCardPopover: React.FC<AddCardPopoverProps> = ({
           <FormLabel>
             Context:
             <FormTextArea value={context} onChange={(e) => setContext(e.target.value)}></FormTextArea>
+          </FormLabel>
+          <FormLabel>
+            Example Output: {/* New input field for example output */}
+            <FormTextArea value={exampleOutput} onChange={(e) => setExampleOutput(e.target.value)}></FormTextArea>
           </FormLabel>
           <FormButton type="submit">Create Card</FormButton>
         </form>

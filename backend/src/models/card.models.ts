@@ -7,15 +7,16 @@ export interface ICard extends Document {
     prompt: string;
     generativeModel: string;
     context: string;
-    previousCards: Types.ObjectId[]; // Array of previous card IDs
-    nextCards: Types.ObjectId[]; // Array of next card IDs
+    exampleOutput?: string; // Add this line
+    previousCards: Types.ObjectId[];
+    nextCards: Types.ObjectId[];
     output: Types.ObjectId | ExecutionDataDocument | null;
     executed: boolean;
     evaluated: boolean;
     inconsistent: boolean;
     createdAt: Date;
     updatedAt: Date;
-    getFormattedDetails: () => Promise<{ answer: string | null, prompt: string, context: string }>;
+    getFormattedDetails: () => Promise<{ answer: string | null, prompt: string, context: string, exampleOutput: string | undefined }>;
     linkCard: (cardId: Types.ObjectId, direction: 'next' | 'previous') => Promise<void>;
     unlinkCard: (cardId: Types.ObjectId, direction: 'next' | 'previous') => Promise<void>;
     getPreviousCardsOutputs: () => Promise<{ [key: string]: string | null }>;
@@ -28,8 +29,9 @@ const cardSchema = new Schema<ICard>(
         prompt: { type: String, required: true },
         generativeModel: { type: String, required: true },
         context: { type: String, required: false },
-        previousCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }], // Array of previous card IDs
-        nextCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }], // Array of next card IDs
+        exampleOutput: { type: String, required: false }, // Add this line
+        previousCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
+        nextCards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
         output: { type: Schema.Types.ObjectId, ref: 'ExecutionData', default: null },
         executed: { type: Boolean, default: false },
         evaluated: { type: Boolean, default: false },
@@ -46,6 +48,7 @@ cardSchema.methods.getFormattedDetails = async function () {
 
     const prompt = card.prompt;
     let context = card.context || '';
+    const exampleOutput = card.exampleOutput; // Add this line
     const previousCardsOutputs = await card.getPreviousCardsOutputs();
 
     if (!context && Object.keys(previousCardsOutputs).length === 0) {
@@ -59,8 +62,9 @@ cardSchema.methods.getFormattedDetails = async function () {
 
     const answer = output ? output.generatedText : null;
 
-    return { answer, prompt, context };
+    return { answer, prompt, context, exampleOutput }; // Modify this line
 };
+
 
 cardSchema.methods.linkCard = async function (cardId: Types.ObjectId, direction: 'next' | 'previous') {
     const card = this as ICard;
@@ -141,7 +145,7 @@ cardSchema.pre('save', async function (next) {
     }
 
     // Check if any of the specified fields have been modified
-    const fieldsToCheck = ['objective', 'prompt', 'context', 'generativeModel'];
+    const fieldsToCheck = ['objective', 'prompt', 'context', 'generativeModel', 'exampleOutput'];
     const isModified = fieldsToCheck.some(field => card.isModified(field));
 
     if (isModified) {
