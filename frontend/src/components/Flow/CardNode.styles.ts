@@ -72,6 +72,8 @@ export const ExecuteButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   position: relative;
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 
   &:hover {
     background-color: darkgreen;

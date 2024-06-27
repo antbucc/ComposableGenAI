@@ -1,6 +1,15 @@
 // src/components/DraggablePopover/DraggablePopover.styles.ts
 
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const CloseButton = styled.button`
   position: absolute;
@@ -197,10 +206,8 @@ export const EvaluateButton = styled.button<EvaluateButtonProps>`
   }
 `;
 
-export const LoadingMessage = styled.p`
-  margin: 0 10px; /* Add margin to center the loading message */
-  font-size: 14px;
-  color: #000;
+export const LoadingIcon = styled.img`
+  animation: ${spin} 2s linear infinite;
 `;
 
 export const EditButton = styled.button`
@@ -268,9 +275,8 @@ export const TitleBand = styled.div`
   text-align: center;
   font-weight: bold;
   line-height: 40px;
-  cursor: pointer;
+  cursor: grab;
 `;
-
 
 export const CopyButton = styled.button`
   background: orange;
@@ -323,7 +329,6 @@ export const ModalButton = styled.button`
 `;
 
 export const OutputSection = styled.div`
-
   align-items: center;
   width: 100%;
   justify-content: space-between;

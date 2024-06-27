@@ -15,7 +15,7 @@ import {
   ButtonContainer,
   ExecuteButton,
   EvaluateButton,
-  LoadingMessage,
+  LoadingIcon,
   EditButton,
   ResolveButton,
   TitleBand,
@@ -31,7 +31,8 @@ import {
   doneIcon,
   reviewIcon,
   copyIcon,
-  openNewIcon
+  openNewIcon,
+  loadingIcon
 } from '../../assets';
 
 interface DraggablePopoverProps {
@@ -342,19 +343,14 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                 data-tooltip="Execute Card"
                 disabled={isExecuting}
               >
-                <img src={executeIcon} alt="Execute" />
+                {isExecuting ? <LoadingIcon src={loadingIcon} alt="Loading" /> : <img src={executeIcon} alt="Execute" />}
               </ExecuteButton>
-              {isExecuting || isEvaluating ? (
-                <LoadingMessage>Loading...</LoadingMessage>
-              ) : (
-                <div style={{ width: '100px' }}></div>
-              )}
               <EvaluateButton
                 onClick={handleEvaluate}
                 data-tooltip="Evaluate Card"
                 disabled={isEvaluating || !card.executed}
               >
-                <img src={evaluateIcon} alt="Evaluate" />
+                {isEvaluating ? <LoadingIcon src={loadingIcon} alt="Loading" /> : <img src={evaluateIcon} alt="Evaluate" />}
               </EvaluateButton>
             </ButtonContainer>
           </>

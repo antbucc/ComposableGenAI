@@ -1,7 +1,9 @@
+// src/components/CardNode/CardNode.tsx
+
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { CardContainer, TitleBand, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton, WarningIcon, LoadingIcon } from './CardNode.styles';
-import {executeIcon,warningIcon,loadingIcon} from '../../assets';
+import { CardContainer, TitleBand, StatusDot, ExecuteButton, StatusContainer, LoadingIcon, CloseButton, WarningIcon } from './CardNode.styles';
+import { executeIcon, warningIcon, loadingIcon } from '../../assets';
 import { executeCard, deleteCard } from '../../services/api';
 
 interface CardNodeProps {
@@ -51,7 +53,6 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
       <TitleBand>{data.title}</TitleBand>
       <CloseButton onClick={handleDelete}>×</CloseButton>
       {data.inconsistent && <WarningIcon src={warningIcon} alt="Inconsistent" />}
-      {isExecuting && <LoadingMessage>Loading...</LoadingMessage>}
       <StatusContainer>
         <ExecuteButton onClick={handleExecute} data-tooltip="Execute Card" disabled={isExecuting}>
           {isExecuting ? <LoadingIcon src={loadingIcon} alt="Loading" /> : <img src={executeIcon} alt="Execute" />}
