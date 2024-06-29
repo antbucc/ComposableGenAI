@@ -10,6 +10,13 @@
 # production
 /build
 
+# plugins data
+
+# music
+/backend/src/plugins/music/output
+/backend/src/plugins/music/input_tabs.txt
+
+
 # misc
 .DS_Store
 .env.local

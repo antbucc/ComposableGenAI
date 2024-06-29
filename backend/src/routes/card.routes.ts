@@ -3,6 +3,7 @@ import {
     createCard,
     getCards,
     executeCardController,
+    executeCardPlugin,
     getCardById,
     deleteAllCards,
     deleteCardById,
@@ -12,7 +13,8 @@ import {
     removeNextCard,
     removePreviousCard,
     getPreviousCardsOutputsController,
-    updateCard
+    updateCard,
+    addPluginToCard
 } from '../controllers/card.controllers';
 import checkAuth from '../middlewares/auth.middleware';
 
@@ -23,6 +25,7 @@ router.get('/', checkAuth, getCards);
 router.get('/without-populate', checkAuth, getCards);
 router.get('/:id', checkAuth, getCardById);
 router.post('/execute/:id', checkAuth, executeCardController);
+router.post('/execute-plugin/:id', checkAuth, executeCardPlugin);
 router.delete('/:id', checkAuth, deleteCardById);
 router.delete('/', checkAuth, deleteAllCards);
 router.post('/evaluate/:id', checkAuth, evaluateCardById);
@@ -32,5 +35,6 @@ router.put('/remove-next/:currentCardId', checkAuth, removeNextCard);
 router.put('/remove-previous/:currentCardId', checkAuth, removePreviousCard);
 router.get('/previous-cards-outputs/:id', checkAuth, getPreviousCardsOutputsController);
 router.put('/:id', checkAuth, updateCard);
+router.put('/:id/plugin', checkAuth, addPluginToCard);
 
 export default router;

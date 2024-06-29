@@ -3,6 +3,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 import { ExecutionDataModel, ExecutionDataDocument } from './executionData.models';
 import { GenerativeModels } from '../types/GenerativeModels';
 
+
 export interface ICard extends Document {
     title: string;
     objective: string;
@@ -16,6 +17,7 @@ export interface ICard extends Document {
     executed: boolean;
     evaluated: boolean;
     inconsistent: boolean;
+    plugin?: string;
     createdAt: Date;
     updatedAt: Date;
     getFormattedDetails: () => Promise<{ answer: string | null, prompt: string, context: string, exampleOutput: string | undefined }>;
@@ -38,6 +40,7 @@ const cardSchema = new Schema<ICard>(
         executed: { type: Boolean, default: false },
         evaluated: { type: Boolean, default: false },
         inconsistent: { type: Boolean, default: false },
+        plugin: { type: String, required: false },
     },
     {
         timestamps: true,

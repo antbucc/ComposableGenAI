@@ -9,6 +9,7 @@ import { evaluateCardOutput } from '../services/evaluation.services';
 import { EvaluationMetricType, EvaluationMetricDefinition } from '../types';
 import { Types } from 'mongoose';
 import { GenerativeModels } from '../types/GenerativeModels';
+import { PluginService } from '../services/plugin.services';
 
 type CreateCardBody = Omit<ICard, '_id'> & {
     execute?: boolean;
@@ -366,5 +367,54 @@ export const updateCard = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(`Error updating card with id ${id}:`, error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const executeCardPlugin = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const params = req.body;
+
+    try {
+        const card = await CardModel.findById(id).exec();
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        if (!card.plugin) {
+            return res.status(400).json({ message: 'No plugin associated with this card' });
+        }
+
+        const output = await PluginService.executePlugin(card.plugin, params);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Disposition', 'attachment; filename="output_files.json"');
+
+        const files = output.map(file => ({
+            filename: file.filename,
+            content: file.content.toString('base64') // Convert content to base64 string
+        }));
+
+        return res.status(200).json({ files });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const addPluginToCard = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { plugin } = req.body;
+
+    try {
+        const card = await CardModel.findById(id).exec();
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        card.plugin = plugin;
+        await card.save();
+
+        return res.status(200).json(card);
+    } catch (err) {
+        next(err);
     }
 };
