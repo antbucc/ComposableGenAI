@@ -386,9 +386,7 @@ export const executeCardPlugin = async (req: Request<{ id: string }>, res: Respo
 
         const output = await PluginService.executePlugin(card.plugin, params);
 
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Disposition', 'attachment; filename="output_files.json"');
-
+        // Convert the files to base64 and prepare the response
         const files = output.map(file => ({
             filename: file.filename,
             content: file.content.toString('base64') // Convert content to base64 string
@@ -399,7 +397,6 @@ export const executeCardPlugin = async (req: Request<{ id: string }>, res: Respo
         next(err);
     }
 };
-
 export const addPluginToCard = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { plugin } = req.body;
