@@ -1,3 +1,5 @@
+// src/services/plugin.services.ts
+
 import { PluginInterface } from '../plugins/plugin.interface';
 import { PluginManager } from '../plugins/plugin.manager';
 

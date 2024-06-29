@@ -10,6 +10,7 @@ import { EvaluationMetricType, EvaluationMetricDefinition } from '../types';
 import { Types } from 'mongoose';
 import { GenerativeModels } from '../types/GenerativeModels';
 import { PluginService } from '../services/plugin.services';
+import { getMIDIInstrumentNumber } from '../types/MIDIInstruments';
 
 type CreateCardBody = Omit<ICard, '_id'> & {
     execute?: boolean;
@@ -372,7 +373,7 @@ export const updateCard = async (req: Request, res: Response) => {
 
 export const executeCardPlugin = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const params = req.body;
+    const { input, tempo, repetitions, instrument } = req.body;
 
     try {
         const card = await CardModel.findById(id).exec();
@@ -384,12 +385,22 @@ export const executeCardPlugin = async (req: Request<{ id: string }>, res: Respo
             return res.status(400).json({ message: 'No plugin associated with this card' });
         }
 
-        const output = await PluginService.executePlugin(card.plugin, params);
+        const instrumentNumber = getMIDIInstrumentNumber(instrument);
+        if (instrumentNumber === undefined) {
+            return res.status(400).json({ message: 'Invalid instrument name' });
+        }
+
+        const output = await PluginService.executePlugin(card.plugin, {
+            input,
+            tempo,
+            repetitions,
+            instrument: instrumentNumber,
+        });
 
         // Convert the files to base64 and prepare the response
         const files = output.map(file => ({
             filename: file.filename,
-            content: file.content.toString('base64') // Convert content to base64 string
+            content: file.content.toString('base64'), // Convert content to base64 string
         }));
 
         return res.status(200).json({ files });

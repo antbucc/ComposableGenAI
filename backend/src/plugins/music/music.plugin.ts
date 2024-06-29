@@ -1,3 +1,5 @@
+// src/plugins/music/music.plugin.ts
+
 import * as fs from 'fs';
 import { exec } from 'child_process';
 import { PluginInterface } from '../plugin.interface';
@@ -6,12 +8,13 @@ interface MusicPluginParams {
     input: string;
     tempo: number;
     repetitions: number;
+    instrument: number; // Use MIDI instrument numbers
 }
 
 export class MusicPlugin implements PluginInterface {
     execute(params: MusicPluginParams): Promise<{ filename: string, content: Buffer }[]> {
         return new Promise((resolve, reject) => {
-            const { input, tempo, repetitions } = params;
+            const { input, tempo, repetitions, instrument } = params;
             const inputFilePath = 'src/plugins/music/input_tabs.txt';
             const outputDir = 'src/plugins/music/output/'; // Fixed output directory
 
@@ -24,7 +27,7 @@ export class MusicPlugin implements PluginInterface {
             }
 
             // Construct the command
-            const command = `python3 src/plugins/music/script.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir}`;
+            const command = `python3 src/plugins/music/script.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrument}`;
 
             // Execute the script
             exec(command, (error, stdout, stderr) => {

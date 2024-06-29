@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# /src/plugins/music/script.py
 
 import os
 import re
@@ -63,18 +63,20 @@ class Tabs:
                 print(f"Warning: Skipping line {i} in the tab as it exceeds the number of strings.")
 
 class Track:
-    def __init__(self, tempo):
+    def __init__(self, tempo, instrument):
         self.track = 0
         self.channel = 0
         self.time = 0.125    # In beats, this controls the timing of notes
         self.duration = 0.25  # In beats, this controls the duration of notes
         self.tempo = tempo   # In BPM
         self.volume = 100    # 0-127, as per the MIDI standard
+        self.instrument = instrument
 
     def midiGenerator(self, a, midi_filename, repetitions=1):
         MyMIDI = MIDIFile(1)
 
-        MyMIDI.addProgramChange(self.track, self.channel, self.time, 1)
+        # Add instrument change to the MIDI file
+        MyMIDI.addProgramChange(self.track, self.channel, self.time, self.instrument)
         MyMIDI.addTempo(self.track, self.time, self.tempo)
         time = 0
         for _ in range(repetitions):
@@ -157,7 +159,7 @@ def clean_output_directory(directory):
         shutil.rmtree(directory)
     os.makedirs(directory)
 
-def main(tab_file, tempo, repetitions, output_dir):
+def main(tab_file, tempo, repetitions, output_dir, instrument):
     clean_output_directory(output_dir)
 
     with open(tab_file, "r") as f:
@@ -173,7 +175,7 @@ def main(tab_file, tempo, repetitions, output_dir):
         midi_filename = os.path.join(output_dir, f"output_{idx+1}.mid")
         wav_filename = os.path.join(output_dir, f"output_{idx+1}.wav")
 
-        outputTrack = Track(tempo)
+        outputTrack = Track(tempo, instrument)
         outputTrack.midiGenerator(t.a, midi_filename, repetitions)
 
         if convert_midi_to_wav(midi_filename, wav_filename):
@@ -187,6 +189,7 @@ if __name__ == '__main__':
     parser.add_argument("tempo", type=int, help="Base tempo for the tabs")
     parser.add_argument("repetitions", type=int, help="Number of repetitions for the tabs")
     parser.add_argument("output_dir", help="The output directory for the generated files")
+    parser.add_argument("instrument", type=int, help="MIDI instrument number")
     args = parser.parse_args()
 
-    main(args.tab_file, args.tempo, args.repetitions, args.output_dir)
+    main(args.tab_file, args.tempo, args.repetitions, args.output_dir, args.instrument)
