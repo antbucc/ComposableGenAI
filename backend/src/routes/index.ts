@@ -7,6 +7,8 @@ import milestoneRouter from './milestone.routes';
 import cardRouter from './card.routes';
 import executionDataRouter from './executionData.routes';
 import promptEnhancementRouter from './promptEnhancement.routes';
+import pluginRouter from './plugin.routes';
+
 
 const router = express.Router();
 
@@ -15,5 +17,6 @@ router.use('/api/milestones', milestoneRouter);
 router.use('/api/cards', cardRouter);
 router.use('/api/executionData', executionDataRouter);
 router.use('/api/promptEnhancement', promptEnhancementRouter);
+router.use('/api/plugins', pluginRouter);
 
 export default router;

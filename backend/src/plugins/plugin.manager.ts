@@ -1,3 +1,5 @@
+// src/plugins/plugin.manager.ts
+
 import { PluginInterface } from './plugin.interface';
 import { MusicPlugin } from './music/music.plugin';
 
