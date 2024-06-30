@@ -1,8 +1,6 @@
-// src/components/PluginSelector/PluginSelector.tsx
-
 import React, { useState, useEffect } from 'react';
 import { fetchPlugins, addPluginToCard } from '../../services/api';
-import { PluginSelectorContainer, Select, Button, PluginList, PluginItem } from './PluginSelector.styles';
+import { PluginSelectorContainer, Select, Button } from './PluginSelector.styles';
 
 interface PluginSelectorProps {
   cardId: string;
@@ -15,16 +13,25 @@ const PluginSelector: React.FC<PluginSelectorProps> = ({ cardId, onPluginAdded }
 
   useEffect(() => {
     const getPlugins = async () => {
-      const plugins = await fetchPlugins();
-      setAvailablePlugins(plugins);
+      try {
+        const plugins = await fetchPlugins();
+        setAvailablePlugins(Array.isArray(plugins) ? plugins : []);
+      } catch (error) {
+        console.error('Error fetching plugins:', error);
+        setAvailablePlugins([]); // Ensure it's always an array
+      }
     };
     getPlugins();
   }, []);
 
   const handleAddPlugin = async () => {
     if (selectedPlugin) {
-      await addPluginToCard(cardId, selectedPlugin);
-      onPluginAdded();
+      try {
+        await addPluginToCard(cardId, selectedPlugin);
+        onPluginAdded();
+      } catch (error) {
+        console.error('Error adding plugin to card:', error);
+      }
     }
   };
 
@@ -37,13 +44,6 @@ const PluginSelector: React.FC<PluginSelectorProps> = ({ cardId, onPluginAdded }
         ))}
       </Select>
       <Button onClick={handleAddPlugin}>Add Plugin</Button>
-      <PluginList>
-        {availablePlugins.map((plugin) => (
-          <PluginItem key={plugin} onClick={() => setSelectedPlugin(plugin)}>
-            {plugin}
-          </PluginItem>
-        ))}
-      </PluginList>
     </PluginSelectorContainer>
   );
 };

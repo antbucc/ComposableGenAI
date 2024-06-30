@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { executeMusicPlugin } from '../../services/api';
+import { executePlugin } from '../../services/api';
 import { MusicPluginContainer, Input, Select, Button, OutputContainer, DownloadLink } from './MusicPluginSection.styles';
 
 interface MusicPluginSectionProps {
@@ -22,8 +22,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
   const [tempo, setTempo] = useState<number>(120);
   const [repetitions, setRepetitions] = useState<number>(1);
   const [instrument, setInstrument] = useState<string>(instruments[0]);
-  const [midiFile, setMidiFile] = useState<string | null>(null);
-  const [wavFile, setWavFile] = useState<string | null>(null);
+  const [files, setFiles] = useState<{ filename?: string; content?: string }[]>([]);
 
   const handleExecute = async () => {
     const params = {
@@ -34,9 +33,8 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
     };
 
     try {
-      const response = await executeMusicPlugin(card._id, params);
-      setMidiFile(response.midi);
-      setWavFile(response.wav);
+      const response = await executePlugin('music', params);
+      setFiles(response);
     } catch (error) {
       console.error('Error executing music plugin:', error);
     }
@@ -61,14 +59,25 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
         </Select>
       </div>
       <Button onClick={handleExecute}>Execute Music Plugin</Button>
-      {midiFile && (
+      {files.length > 0 && (
         <OutputContainer>
-          <DownloadLink href={`data:audio/midi;base64,${midiFile}`} download="output.mid">Download MIDI</DownloadLink>
-          <DownloadLink href={`data:audio/wav;base64,${wavFile}`} download="output.wav">Download WAV</DownloadLink>
-          <audio controls>
-            <source src={`data:audio/wav;base64,${wavFile}`} type="audio/wav" />
-            Your browser does not support the audio element.
-          </audio>
+          {files.map((file, index) => (
+            <div key={index}>
+              {file.filename && file.content && (
+                <>
+                  <DownloadLink href={`data:audio/${file.filename.split('.').pop()};base64,${file.content}`} download={file.filename}>
+                    Download {file.filename.split('.').pop()?.toUpperCase()}
+                  </DownloadLink>
+                  {file.filename.endsWith('.wav') && (
+                    <audio controls>
+                      <source src={`data:audio/wav;base64,${file.content}`} type="audio/wav" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  )}
+                </>
+              )}
+            </div>
+          ))}
         </OutputContainer>
       )}
     </MusicPluginContainer>
