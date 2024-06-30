@@ -5,6 +5,7 @@ export const SectionContent = styled.div`
 `;
 
 export const PluginItem = styled.div`
+  font-weight: bold;
   margin-top: 10px;
   width: 100%;
   margin-bottom: 10px;
@@ -12,6 +13,8 @@ export const PluginItem = styled.div`
   border-radius: 5px;
   background-color: #fff;
   text-align: center;
+  text-transform: capitalize;
+  
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 
@@ -22,7 +25,7 @@ export const PluginItem = styled.div`
 `;
 
 interface PluginContentProps {
-    isCollapsed: boolean;
+  isCollapsed: boolean;
 }
 
 export const PluginContent = styled.div<PluginContentProps>`

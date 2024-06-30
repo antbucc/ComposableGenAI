@@ -42,6 +42,24 @@ export const Button = styled.button`
   }
 `;
 
+export const ExecuteButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  background-color: orange;
+  border: 2px solid black;
+  border-radius: 5px;
+  img {
+    width: 32px;
+    height: 32px;
+  }
+
+  &:hover {
+    background-color: darkorange;
+  }
+`;
+
 export const OutputContainer = styled.div`
   margin-top: 10px;
   display: flex;
@@ -63,7 +81,6 @@ export const FileContainer = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
-  display: flex;
   align-items: center;
   gap: 5px;
 `;
@@ -73,13 +90,16 @@ export const PlayPauseButton = styled.button`
   background-color: orange;
   border: 2px solid black;
   border-radius: 5px;
-
   padding: 5px;
 
   img {
     width: 20px;
     height: 18px;
     filter: brightness(0);
+  }
+
+  &:hover {
+    background-color: darkorange;
   }
 `;
 
@@ -92,7 +112,6 @@ export const DownloadButton = styled.a`
   border-radius: 5px;
   cursor: pointer;
   color: white;
-
   padding: 5px;
 
   img {
@@ -102,6 +121,6 @@ export const DownloadButton = styled.a`
   }
 
   &:hover {
-    background-color: #e08e0b;
+    background-color: darkorange;
   }
 `;

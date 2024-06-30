@@ -12,8 +12,9 @@ import {
   PlayPauseButton,
   DownloadButton,
   ButtonContainer,
+  ExecuteButton,
 } from './MusicPluginSection.styles';
-import { playIcon, pauseIcon, downloadIcon } from '../../assets';
+import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
 
 interface MusicPluginSectionProps {
   card: any;
@@ -89,7 +90,9 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
           ))}
         </Select>
       </InstrumentContainer>
-      <Button onClick={handleExecute}>Execute Music Plugin</Button>
+      <ExecuteButton onClick={handleExecute}>
+        <img src={executeDownIcon} alt="Execute" />
+      </ExecuteButton>
       {files.length > 0 && (
         <OutputContainer>
           {files.map((file, index) => (

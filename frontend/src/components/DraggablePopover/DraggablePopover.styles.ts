@@ -350,7 +350,8 @@ export const AddPluginButton = styled.button`
   display: flex;
   align-items: center;
   position: absolute;
-  right: 0;
+  right: -10px;
+  top: -7px; /* Move up by 5px */
 
   img {
     width: 15px;

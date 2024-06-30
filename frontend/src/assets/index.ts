@@ -16,3 +16,4 @@ export { default as warningIcon } from './warning.svg';
 export { default as playIcon } from './play.svg';
 export { default as pauseIcon } from './pause.svg';
 export { default as downloadIcon } from './download.svg';
+export { default as executeDownIcon } from './execute_down.svg';
