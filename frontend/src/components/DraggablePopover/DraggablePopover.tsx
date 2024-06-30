@@ -5,8 +5,7 @@ import {
   fetchPreviousCardsOutputs,
   executeCard,
   evaluateCard,
-  updateCard,
-  addPluginToCard,
+  updateCard
 } from '../../services/api';
 import {
   CloseButton,

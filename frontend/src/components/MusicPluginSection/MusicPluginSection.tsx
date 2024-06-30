@@ -14,6 +14,7 @@ import {
   ExecuteButton,
 } from './MusicPluginSection.styles';
 import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
+import { MUSIC_INSTRUMENTS } from '../../config/config';
 
 interface MusicPluginSectionProps {
   card: any;
@@ -29,22 +30,11 @@ interface PluginFile {
   wav: string;
 }
 
-const instruments = [
-  "AcousticGrandPiano",
-  "BrightAcousticPiano",
-  "ElectricGrandPiano",
-  "HonkytonkPiano",
-  "ElectricPiano1",
-  "ElectricPiano2",
-  "Harpsichord",
-  "Clavinet",
-  // Add other instruments as needed
-];
 
 const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
   const [tempo, setTempo] = useState<number>(120);
   const [repetitions, setRepetitions] = useState<number>(1);
-  const [instrument, setInstrument] = useState<string>(instruments[0]);
+  const [instrument, setInstrument] = useState<string>(MUSIC_INSTRUMENTS[0]);
   const [files, setFiles] = useState<PluginFile[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean[]>([]);
   const audioRef = React.useRef<HTMLAudioElement>(null);
@@ -107,7 +97,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
       <InstrumentContainer>
         <label>Instrument:</label>
         <Select value={instrument} onChange={(e) => setInstrument(e.target.value)}>
-          {instruments.map((inst) => (
+          {MUSIC_INSTRUMENTS.map((inst) => (
             <option key={inst} value={inst}>{inst}</option>
           ))}
         </Select>
@@ -142,7 +132,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
               )}
             </FileContainer>
           ))}
-          <audio ref={audioRef} onEnded={() => setIsPlaying((prev) => prev.map((_, i) => false))} />
+          <audio ref={audioRef} onEnded={() => setIsPlaying((prev) => prev.map(() => false))} />
         </OutputContainer>
       )}
     </MusicPluginContainer>
