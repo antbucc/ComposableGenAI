@@ -1,33 +1,46 @@
-// src/components/PluginSection/PluginSection.tsx
-
 import React, { useState } from 'react';
 import MusicPluginSection from '../MusicPluginSection/MusicPluginSection';
-import {  SectionTitle, SectionContent } from './PluginSection.styles';
+import {
+  SectionContent,
+  PluginItem,
+  PluginContent,
+} from './PluginSection.styles';
 
 interface PluginSectionProps {
-  plugin: string;
+  plugins: string[];
   card: any;
 }
 
-const PluginSection: React.FC<PluginSectionProps> = ({ plugin, card }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+const PluginSection: React.FC<PluginSectionProps> = ({ plugins, card }) => {
+  const [selectedPlugin, setSelectedPlugin] = useState<string | null>(null);
+
+  const handlePluginClick = (plugin: string) => {
+    setSelectedPlugin(selectedPlugin === plugin ? null : plugin);
+  };
 
   const renderPluginContent = () => {
-    if (plugin === 'music') {
-      return <MusicPluginSection card={card} />;
+    switch (selectedPlugin) {
+      case 'music':
+        return <MusicPluginSection card={card} />;
+      // Add cases for other plugins here
+      default:
+        return <p>{selectedPlugin} plugin is not yet implemented.</p>;
     }
-    return <p>{plugin} plugin is not yet implemented.</p>;
   };
 
   return (
-    <>
-      <SectionTitle onClick={() => setIsCollapsed(!isCollapsed)}>
-        {plugin} {isCollapsed ? '▼' : '▲'}
-      </SectionTitle>
-      <SectionContent isCollapsed={isCollapsed}>
-        {renderPluginContent()}
-      </SectionContent>
-    </>
+    <SectionContent>
+      {plugins.map((plugin) => (
+        <PluginItem key={plugin}>
+          <div onClick={() => handlePluginClick(plugin)}>
+            {plugin}
+          </div>
+          <PluginContent isCollapsed={selectedPlugin !== plugin}>
+            {selectedPlugin === plugin && renderPluginContent()}
+          </PluginContent>
+        </PluginItem>
+      ))}
+    </SectionContent>
   );
 };
 

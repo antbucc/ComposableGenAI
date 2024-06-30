@@ -115,7 +115,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   setPlugins(data.plugins || []);
 };
 
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -368,9 +367,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                     onClose={() => setIsPluginSelectorVisible(false)}
                   />
                 )}
-                {plugins.map((plugin) => (
-                  <PluginSection key={plugin} plugin={plugin} card={card} />
-                ))}
+                <PluginSection plugins={plugins} card={card} />
               </Section>
             </PopoverContent>
             <ButtonContainer>

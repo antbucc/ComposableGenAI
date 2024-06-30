@@ -1,29 +1,34 @@
-// src/components/PluginSection/PluginSection.styles.ts
-
 import styled from 'styled-components';
 
-export const SectionTitle = styled.div`
-  font-weight: bold;
+export const SectionContent = styled.div`
+  width: 100%;
+`;
+
+export const PluginItem = styled.div`
+  margin-top: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  text-align: center;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
-  padding: 5px;
+  transition: all 0.3s ease-in-out;
 
   &:hover {
-    color: #007bff;
+    border-color: orange;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 `;
 
-interface SectionContentProps {
+interface PluginContentProps {
     isCollapsed: boolean;
 }
 
-export const SectionContent = styled.div<SectionContentProps>`
+export const PluginContent = styled.div<PluginContentProps>`
   margin-top: 5px;
   max-height: ${(props) => (props.isCollapsed ? '0' : 'auto')};
   overflow-y: hidden;
   transition: max-height 0.3s ease-in-out;
+  width: 100%;
 `;
