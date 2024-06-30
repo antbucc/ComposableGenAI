@@ -34,6 +34,8 @@ import {
   openNewIcon,
   loadingIcon
 } from '../../assets';
+import PluginSelector from '../PluginSelector/PluginSelector';
+import PluginSection from '../PluginSection/PluginSection';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -65,6 +67,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [updatedCard, setUpdatedCard] = useState<any>({});
   const [isCopying, setIsCopying] = useState(false);
+  const [plugins, setPlugins] = useState<string[]>([]);
 
   useEffect(() => {
     const getCard = async () => {
@@ -72,6 +75,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
         const data = await fetchCardById(cardId);
         setCard(data);
         setUpdatedCard(data);
+        setPlugins(data.plugins || []);
       } catch (err) {
         setError('Failed to fetch card. Please try again later.');
       } finally {
@@ -96,6 +100,12 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       getPreviousCardsOutputs();
     }
   }, [card]);
+
+  const handlePluginAdded = async () => {
+    const data = await fetchCardById(cardId);
+    setCard(data);
+    setPlugins(data.plugins || []);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -186,7 +196,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       onOpenModal(card.output.generatedText);
     }
   };
-
 
   return (
     <Draggable handle=".draggable-handle" bounds="parent">
@@ -336,6 +345,15 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   ))}
                 </Section>
               )}
+              <Section>
+                <SectionTitle>Plugins</SectionTitle>
+                <PluginSelector cardId={cardId} onPluginAdded={handlePluginAdded} />
+                <div>
+                  {plugins.map((plugin) => (
+                    <PluginSection key={plugin} plugin={plugin} card={card} />
+                  ))}
+                </div>
+              </Section>
             </PopoverContent>
             <ButtonContainer>
               <ExecuteButton

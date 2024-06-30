@@ -135,3 +135,44 @@ export const deleteTask = async (id: string) => {
         throw error;
     }
 };
+
+export const fetchPlugins = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/plugins`);
+        return response.data.plugins;
+    } catch (error) {
+        console.error('Error fetching plugins:', error);
+        throw error;
+    }
+};
+
+export const executeMusicPlugin = async (cardId: string, params: any) => {
+    try {
+        const response = await axios.post(`${API_URL}/plugins/music/execute`, { cardId, ...params });
+        return response.data;
+    } catch (error) {
+        console.error('Error executing music plugin:', error);
+        throw error;
+    }
+};
+
+export const addPluginToCard = async (cardId: string, plugin: string) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/${cardId}/plugin`, { plugin });
+        return response.data;
+    } catch (error) {
+        console.error(`Error adding plugin to card with id ${cardId}:`, error);
+        throw error;
+    }
+};
+
+export const removePluginFromCard = async (cardId: string, plugin: string) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/${cardId}/remove-plugin`, { plugin });
+        return response.data;
+    } catch (error) {
+        console.error(`Error removing plugin to card with id ${cardId}:`, error);
+        throw error;
+    }
+};
+
