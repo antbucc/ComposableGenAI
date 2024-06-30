@@ -6,7 +6,6 @@ import {
   InstrumentContainer,
   Input,
   Select,
-  Button,
   OutputContainer,
   FileContainer,
   PlayPauseButton,
@@ -18,6 +17,16 @@ import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets
 
 interface MusicPluginSectionProps {
   card: any;
+}
+
+interface File {
+  filename: string;
+  content: string;
+}
+
+interface PluginFile {
+  midi: string;
+  wav: string;
 }
 
 const instruments = [
@@ -36,8 +45,8 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
   const [tempo, setTempo] = useState<number>(120);
   const [repetitions, setRepetitions] = useState<number>(1);
   const [instrument, setInstrument] = useState<string>(instruments[0]);
-  const [files, setFiles] = useState<Array<{ midi: string, wav: string }>>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [files, setFiles] = useState<PluginFile[]>([]);
+  const [isPlaying, setIsPlaying] = useState<boolean[]>([]);
   const audioRef = React.useRef<HTMLAudioElement>(null);
 
   const handleExecute = async () => {
@@ -49,10 +58,21 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
     };
 
     try {
-      const response = await executePlugin('music', params);
-      const midiFile = response.find((file: any) => file.filename.endsWith('.mid')).content;
-      const wavFile = response.find((file: any) => file.filename.endsWith('.wav')).content;
-      setFiles([...files, { midi: midiFile, wav: wavFile }]);
+      const response: File[] = await executePlugin('music', params);
+      const newFiles: Record<string, PluginFile> = response.reduce((acc: Record<string, PluginFile>, file) => {
+        const fileType = file.filename.endsWith('.mid') ? 'midi' : 'wav';
+        const fileName = file.filename.split('.')[0];
+
+        if (!acc[fileName]) {
+          acc[fileName] = { midi: '', wav: '' };
+        }
+        acc[fileName][fileType] = file.content;
+
+        return acc;
+      }, {});
+
+      setFiles(Object.values(newFiles));
+      setIsPlaying(new Array(Object.values(newFiles).length).fill(false));
     } catch (error) {
       console.error('Error executing music plugin:', error);
     }
@@ -60,13 +80,15 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
 
   const handlePlayPause = (index: number) => {
     if (audioRef.current) {
-      if (isPlaying) {
+      if (isPlaying[index]) {
         audioRef.current.pause();
       } else {
         audioRef.current.src = `data:audio/wav;base64,${files[index].wav}`;
         audioRef.current.play();
       }
-      setIsPlaying(!isPlaying);
+      setIsPlaying((prev) =>
+        prev.map((playing, i) => (i === index ? !playing : playing))
+      );
     }
   };
 
@@ -101,7 +123,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
                 <label>Audio:</label>
                 <ButtonContainer>
                   <PlayPauseButton onClick={() => handlePlayPause(index)}>
-                    <img src={isPlaying ? pauseIcon : playIcon} alt="Play/Pause" />
+                    <img src={isPlaying[index] ? pauseIcon : playIcon} alt="Play/Pause" />
                   </PlayPauseButton>
                   <DownloadButton href={`data:audio/wav;base64,${file.wav}`} download={`output${index + 1}.wav`}>
                     <img src={downloadIcon} alt="Download" />
@@ -120,7 +142,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
               )}
             </FileContainer>
           ))}
-          <audio ref={audioRef} onEnded={() => setIsPlaying(false)} />
+          <audio ref={audioRef} onEnded={() => setIsPlaying((prev) => prev.map((_, i) => false))} />
         </OutputContainer>
       )}
     </MusicPluginContainer>

@@ -81,6 +81,7 @@ export const FileContainer = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
+  display: flex;
   align-items: center;
   gap: 5px;
 `;
