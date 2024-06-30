@@ -379,7 +379,28 @@ export const addPluginToCard = async (req: Request<{ id: string }>, res: Respons
             return res.status(404).json({ message: 'Card not found' });
         }
 
-        card.plugin = plugin;
+        if (!card.plugins.includes(plugin)) {
+            card.plugins.push(plugin);
+            await card.save();
+        }
+
+        return res.status(200).json(card);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const removePluginFromCard = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { plugin } = req.body;
+
+    try {
+        const card = await CardModel.findById(id).exec();
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        card.plugins = card.plugins.filter(p => p !== plugin);
         await card.save();
 
         return res.status(200).json(card);

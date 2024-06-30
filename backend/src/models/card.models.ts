@@ -17,7 +17,7 @@ export interface ICard extends Document {
     executed: boolean;
     evaluated: boolean;
     inconsistent: boolean;
-    plugin?: string;
+    plugins: string[];
     createdAt: Date;
     updatedAt: Date;
     getFormattedDetails: () => Promise<{ answer: string | null, prompt: string, context: string, exampleOutput: string | undefined }>;
@@ -40,7 +40,7 @@ const cardSchema = new Schema<ICard>(
         executed: { type: Boolean, default: false },
         evaluated: { type: Boolean, default: false },
         inconsistent: { type: Boolean, default: false },
-        plugin: { type: String, required: false },
+        plugins: [{ type: String }],
     },
     {
         timestamps: true,
