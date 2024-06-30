@@ -13,3 +13,6 @@ export { default as openNewIcon } from './open_new.svg';
 export { default as refreshIcon } from './refresh.svg';
 export { default as reviewIcon } from './review.svg';
 export { default as warningIcon } from './warning.svg';
+export { default as playIcon } from './play.svg';
+export { default as pauseIcon } from './pause.svg';
+export { default as downloadIcon } from './download.svg';

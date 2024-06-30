@@ -139,7 +139,7 @@ export const deleteTask = async (id: string) => {
 export const fetchPlugins = async () => {
     try {
         const response = await axios.get(`${API_URL}/plugins`);
-        return response.data.plugins; // Assuming the response has a 'plugins' key
+        return response.data.plugins;
     } catch (error) {
         console.error('Error fetching plugins:', error);
         throw error;

@@ -92,15 +92,9 @@ interface SectionContentProps {
 
 export const SectionContent = styled.div<SectionContentProps>`
   margin-top: 5px;
-  max-height: 200px;
-  overflow-y: auto;
-  display: ${(props) => (props.isCollapsed ? 'none' : 'block')};
-
-  scrollbar-width: none;  /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-  }
+  max-height: ${(props) => (props.isCollapsed ? '0' : 'auto')};
+  overflow-y: hidden;
+  transition: max-height 0.3s ease-in-out;
 `;
 
 export const Label = styled.label`
@@ -345,4 +339,35 @@ export const ButtonGroup = styled.div`
   z-index: 2; /* Ensure buttons are above the output section */
   top: -3px; /* Move up by 3px */
   right: -5px; /* Move right by 5px */
+`;
+
+export const AddPluginButton = styled.button`
+  background: orange;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+
+  img {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    filter: brightness(0); 
+  }
+
+  &:hover {
+    background: #ff8c00;
+  }
+`;
+
+export const PluginsContainer = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;

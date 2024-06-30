@@ -1,6 +1,8 @@
-import React from 'react';
+// src/components/PluginSection/PluginSection.tsx
+
+import React, { useState } from 'react';
 import MusicPluginSection from '../MusicPluginSection/MusicPluginSection';
-import { PluginContainer } from './PluginSection.styles';
+import {  SectionTitle, SectionContent } from './PluginSection.styles';
 
 interface PluginSectionProps {
   plugin: string;
@@ -8,14 +10,24 @@ interface PluginSectionProps {
 }
 
 const PluginSection: React.FC<PluginSectionProps> = ({ plugin, card }) => {
-  if (plugin === 'music') {
-    return <MusicPluginSection card={card} />;
-  }
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const renderPluginContent = () => {
+    if (plugin === 'music') {
+      return <MusicPluginSection card={card} />;
+    }
+    return <p>{plugin} plugin is not yet implemented.</p>;
+  };
 
   return (
-    <PluginContainer>
-      <p>{plugin} plugin is not yet implemented.</p>
-    </PluginContainer>
+    <>
+      <SectionTitle onClick={() => setIsCollapsed(!isCollapsed)}>
+        {plugin} {isCollapsed ? '▼' : '▲'}
+      </SectionTitle>
+      <SectionContent isCollapsed={isCollapsed}>
+        {renderPluginContent()}
+      </SectionContent>
+    </>
   );
 };
 

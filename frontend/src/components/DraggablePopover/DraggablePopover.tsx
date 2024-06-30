@@ -1,8 +1,13 @@
-// src/components/DraggablePopover/DraggablePopover.tsx
-
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import { fetchCardById, fetchPreviousCardsOutputs, executeCard, evaluateCard, updateCard } from '../../services/api';
+import {
+  fetchCardById,
+  fetchPreviousCardsOutputs,
+  executeCard,
+  evaluateCard,
+  updateCard,
+  addPluginToCard,
+} from '../../services/api';
 import {
   CloseButton,
   PopoverContent,
@@ -22,7 +27,8 @@ import {
   CopyButton,
   ModalButton,
   OutputSection,
-  ButtonGroup
+  ButtonGroup,
+  AddPluginButton,
 } from './DraggablePopover.styles';
 import {
   executeIcon,
@@ -32,7 +38,8 @@ import {
   reviewIcon,
   copyIcon,
   openNewIcon,
-  loadingIcon
+  loadingIcon,
+  addIcon,
 } from '../../assets';
 import PluginSelector from '../PluginSelector/PluginSelector';
 import PluginSection from '../PluginSection/PluginSection';
@@ -68,6 +75,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [updatedCard, setUpdatedCard] = useState<any>({});
   const [isCopying, setIsCopying] = useState(false);
   const [plugins, setPlugins] = useState<string[]>([]);
+  const [isPluginSelectorVisible, setIsPluginSelectorVisible] = useState(false);
 
   useEffect(() => {
     const getCard = async () => {
@@ -102,10 +110,11 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   }, [card]);
 
   const handlePluginAdded = async () => {
-    const data = await fetchCardById(cardId);
-    setCard(data);
-    setPlugins(data.plugins || []);
-  };
+  const data = await fetchCardById(cardId);
+  setCard(data);
+  setPlugins(data.plugins || []);
+};
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -346,13 +355,22 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                 </Section>
               )}
               <Section>
-                <SectionTitle>Plugins</SectionTitle>
-                <PluginSelector cardId={cardId} onPluginAdded={handlePluginAdded} />
-                <div>
-                  {plugins.map((plugin) => (
-                    <PluginSection key={plugin} plugin={plugin} card={card} />
-                  ))}
-                </div>
+                <SectionTitle>
+                  Plugins
+                  <AddPluginButton onClick={() => setIsPluginSelectorVisible(true)}>
+                    <img src={addIcon} alt="Add Plugin" />
+                  </AddPluginButton>
+                </SectionTitle>
+                {isPluginSelectorVisible && (
+                  <PluginSelector
+                    cardId={cardId}
+                    onPluginAdded={handlePluginAdded}
+                    onClose={() => setIsPluginSelectorVisible(false)}
+                  />
+                )}
+                {plugins.map((plugin) => (
+                  <PluginSection key={plugin} plugin={plugin} card={card} />
+                ))}
               </Section>
             </PopoverContent>
             <ButtonContainer>
