@@ -3,7 +3,6 @@ import {
     createCard,
     getCards,
     executeCardController,
-    executeCardPlugin,
     getCardById,
     deleteAllCards,
     deleteCardById,
@@ -25,7 +24,6 @@ router.get('/', checkAuth, getCards);
 router.get('/without-populate', checkAuth, getCards);
 router.get('/:id', checkAuth, getCardById);
 router.post('/execute/:id', checkAuth, executeCardController);
-router.post('/execute-plugin/:id', checkAuth, executeCardPlugin);
 router.delete('/:id', checkAuth, deleteCardById);
 router.delete('/', checkAuth, deleteAllCards);
 router.post('/evaluate/:id', checkAuth, evaluateCardById);

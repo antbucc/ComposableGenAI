@@ -3,18 +3,26 @@
 import * as fs from 'fs';
 import { exec } from 'child_process';
 import { PluginInterface } from '../plugin.interface';
+import { getMIDIInstrumentNumber } from '../../types/MIDIInstruments';
 
 interface MusicPluginParams {
     input: string;
     tempo: number;
     repetitions: number;
-    instrument: number; // Use MIDI instrument numbers
+    instrument: string; // Use instrument name
 }
 
 export class MusicPlugin implements PluginInterface {
-    execute(params: MusicPluginParams): Promise<{ filename: string, content: Buffer }[]> {
+    execute(params: MusicPluginParams): Promise<{ filename: string, content: string }[]> {
         return new Promise((resolve, reject) => {
             const { input, tempo, repetitions, instrument } = params;
+
+            // Convert instrument name to number
+            const instrumentNumber = getMIDIInstrumentNumber(instrument);
+            if (instrumentNumber === undefined) {
+                return reject(new Error('Invalid instrument name'));
+            }
+
             const inputFilePath = 'src/plugins/music/input_tabs.txt';
             const outputDir = 'src/plugins/music/output/'; // Fixed output directory
 
@@ -27,7 +35,7 @@ export class MusicPlugin implements PluginInterface {
             }
 
             // Construct the command
-            const command = `python3 src/plugins/music/script.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrument}`;
+            const command = `python3 src/plugins/music/script.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrumentNumber}`;
 
             // Execute the script
             exec(command, (error, stdout, stderr) => {
@@ -46,7 +54,7 @@ export class MusicPlugin implements PluginInterface {
                 // Read the generated files from the output directory
                 const outputFiles = fs.readdirSync(outputDir).map(file => ({
                     filename: file,
-                    content: fs.readFileSync(`${outputDir}${file}`)
+                    content: fs.readFileSync(`${outputDir}${file}`).toString('base64') // Convert content to base64 string
                 }));
 
                 resolve(outputFiles);

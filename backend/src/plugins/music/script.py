@@ -3,7 +3,7 @@
 import os
 import re
 import argparse
-from midiutil import MIDIFile
+from midiutil import MIDIFile # type: ignore
 import shutil
 
 def suggest_tempo(sections, base_tempo=100):
