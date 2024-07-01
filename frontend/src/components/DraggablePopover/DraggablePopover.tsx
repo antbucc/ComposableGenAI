@@ -208,7 +208,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     <Draggable handle=".draggable-handle" bounds="parent">
       <PopoverContainer
         style={{
-          top: '25%',
+          top: '10%',
           left: `${calculateLeftPosition(index)}%`,
           transform: 'translateX(-50%)',
         }}

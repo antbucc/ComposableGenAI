@@ -53,7 +53,7 @@ cardSchema.methods.getFormattedDetails = async function () {
 
     const prompt = card.prompt;
     let context = card.context || '';
-    const exampleOutput = card.exampleOutput; // Add this line
+    context += "Example output:" + card.exampleOutput;
     const previousCardsOutputs = await card.getPreviousCardsOutputs();
 
     if (!context && Object.keys(previousCardsOutputs).length === 0) {
@@ -67,7 +67,7 @@ cardSchema.methods.getFormattedDetails = async function () {
 
     const answer = output ? output.generatedText : null;
 
-    return { answer, prompt, context, exampleOutput }; // Modify this line
+    return { answer, prompt, context };
 };
 
 

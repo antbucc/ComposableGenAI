@@ -28,7 +28,7 @@ export const CloseButton = styled.button`
 export const PopoverContainer = styled.div`
   position: absolute;
   width: 28%;
-  height: 60vh;
+  height: 80vh;
   padding: 60px 20px 0 20px; /* Adjust padding to accommodate title */
   background: white;
   border: 1px solid #ccc;
