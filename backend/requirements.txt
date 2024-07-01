@@ -1,0 +1,7 @@
+promptflow
+promptflow-evals
+python-dotenv
+mido
+midiutil
+numpy
+timidity
