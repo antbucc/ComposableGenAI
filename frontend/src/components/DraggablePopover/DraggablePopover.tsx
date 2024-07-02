@@ -7,6 +7,7 @@ import {
   evaluateCard,
   updateCard
 } from '../../services/api';
+import ReactMarkdown from 'react-markdown';
 import {
   CloseButton,
   PopoverContent,
@@ -109,10 +110,10 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   }, [card]);
 
   const handlePluginAdded = async () => {
-  const data = await fetchCardById(cardId);
-  setCard(data);
-  setPlugins(data.plugins || []);
-};
+    const data = await fetchCardById(cardId);
+    setCard(data);
+    setPlugins(data.plugins || []);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -264,7 +265,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                         onChange={handleChange}
                       ></textarea>
                     ) : (
-                      <Value>{card.prompt}</Value>
+                      <Value>
+                        <ReactMarkdown>{card.prompt}</ReactMarkdown>
+                      </Value>
                     )}
                   </div>
                 </SectionContent>
@@ -283,7 +286,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                         onChange={handleChange}
                       ></textarea>
                     ) : (
-                      <Value>{card.context}</Value>
+                      <Value>
+                        <ReactMarkdown>{card.context}</ReactMarkdown>
+                      </Value>
                     )}
                   </div>
                   {card.previousCards && Object.keys(card.previousCards).length > 0 && !isEditing && (
@@ -309,7 +314,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                             onChange={handleChange}
                           ></textarea>
                         ) : (
-                          <Value>{card.exampleOutput || 'No example output provided'}</Value>
+                          <Value>
+                            <ReactMarkdown>{card.exampleOutput || 'No example output provided'}</ReactMarkdown>
+                          </Value>
                         )}
                       </div>
                     </SectionContent>
@@ -334,7 +341,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   {card.output ? (
                     <>
                       <Label>Generated Text:</Label>
-                      <Value>{card.output.generatedText}</Value>
+                      <Value>
+                        <ReactMarkdown>{card.output.generatedText}</ReactMarkdown>
+                      </Value>
                     </>
                   ) : (
                     <Value>No output generated yet</Value>

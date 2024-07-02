@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchTaskById, executeCard, deleteCard } from '../../services/api';
+import { fetchTaskById, executeCard, deleteCard, removeNextCard } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
 import AddCardPopover from '../../components/AddCardPopover/AddCardPopover';
 import Navbar from '../../components/Navbar/Navbar';
@@ -12,12 +12,6 @@ import DraggablePopover from '../../components/DraggablePopover/DraggablePopover
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
 import OutputDetailModal from '../../components/OutputDetailModal/OutputDetailModal';
 import InstructionsPopup from '../../components/InstructionsPopup/InstructionsPopup';
-
-const edgeOptions = {
-  animated: true,
-  style: { stroke: '#000' },
-  arrowHeadType: 'arrowclosed',
-};
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +24,24 @@ const TaskDetailPage: React.FC = () => {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [modalOutput, setModalOutput] = useState<string | null>(null);
   const [showInstructions, setShowInstructions] = useState(false);
+
+  const handleDeleteEdge = async (edgeId: string) => {
+    try {
+      const edge = edges.find((e) => e.id === edgeId);
+      if (edge) {
+        const { source, target } = edge;
+        await removeNextCard(source, target);
+        setEdges((eds) => eds.filter((e) => e.id !== edgeId));
+      }
+    } catch (error) {
+      console.error('Error deleting edge:', error);
+    }
+  };
+
+  const edgeOptions = {
+    type: 'card',
+    data: { onRemove: handleDeleteEdge },
+  };
 
   const fetchTaskData = async () => {
     if (id) {
@@ -47,7 +59,7 @@ const TaskDetailPage: React.FC = () => {
             onExecute: handleExecute,
             onDelete: handleDelete,
             onCardUpdate: handleCardUpdate,
-            taskId: data._id, // Pass taskId to each node
+            taskId: data._id,
           },
           position: { x: 200 * index, y: 100 },
           type: 'cardNode',
@@ -205,7 +217,7 @@ const TaskDetailPage: React.FC = () => {
           index={index}
           onExecute={handleExecute}
           onCardUpdate={handleCardUpdate}
-          onOpenModal={handleOpenModal} // Pass the handleOpenModal function
+          onOpenModal={handleOpenModal}
         />
       ))}
       {modalOutput && (

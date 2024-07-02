@@ -1,6 +1,12 @@
 // src/components/CardEdge/CardEdge.styles.ts
 
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const dashAnimation = keyframes`
+  to {
+    stroke-dashoffset: 0;
+  }
+`;
 
 export const EdgeButton = styled.img`
   cursor: pointer;
@@ -12,6 +18,9 @@ export const EdgeButton = styled.img`
 export const EdgePath = styled.path`
   stroke: #000000;
   stroke-width: 2;
+  stroke-dasharray: 10;
+  stroke-dashoffset: 20;
+  animation: ${dashAnimation} 2s linear infinite;
 `;
 
 export const PopoverContainer = styled.div`
