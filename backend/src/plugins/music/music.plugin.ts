@@ -35,18 +35,18 @@ export class MusicPlugin implements PluginInterface {
             }
 
             // Construct the command
-            const command = `python3 src/plugins/music/script.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrumentNumber}`;
+            const command = `python3 src/plugins/music/main.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrumentNumber}`;
 
             // Execute the script
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Execution error: ${error}`);
-                    return reject(`Execution error: ${error.message}`);
+                    return reject(new Error(`Execution error: ${error.message}`));
                 }
 
                 if (stderr) {
                     console.error(`Script error: ${stderr}`);
-                    return reject(`Script error: ${stderr}`);
+                    return reject(new Error(`Script error: ${stderr}`));
                 }
 
                 console.log(`Script output: ${stdout}`);
