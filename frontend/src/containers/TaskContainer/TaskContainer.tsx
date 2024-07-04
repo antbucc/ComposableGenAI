@@ -1,3 +1,5 @@
+// src/containers/TaskContainer/TaskContainer.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTasks, deleteTask } from '../../services/api';
@@ -37,6 +39,9 @@ const TaskContainer: React.FC<TaskContainerProps> = ({ refresh }) => {
   }, [refresh]); // Refetch tasks when `refresh` prop changes
 
   const handleDelete = async (id: string) => {
+    const confirmed = window.confirm('Are you sure you want to delete this task?');
+    if (!confirmed) return;
+
     try {
       await deleteTask(id);
       setTasks(tasks.filter(task => task._id !== id));

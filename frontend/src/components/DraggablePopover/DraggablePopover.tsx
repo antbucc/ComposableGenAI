@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import Draggable from 'react-draggable';
 import {
   fetchCardById,
@@ -43,6 +43,7 @@ import {
 } from '../../assets';
 import PluginSelector from '../PluginSelector/PluginSelector';
 import PluginSection from '../PluginSection/PluginSection';
+import { GENERATIVE_MODELS } from '../../config/config';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -171,7 +172,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     setIsPromptCollapsed(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setUpdatedCard((prev: any) => ({ ...prev, [name]: value }));
   };
@@ -249,6 +250,22 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   />
                 ) : (
                   <Value>{card.objective}</Value>
+                )}
+              </Section>
+              <Section>
+                <Label>Generative Model:</Label>
+                {isEditing ? (
+                  <select
+                    name="generativeModel"
+                    value={updatedCard.generativeModel}
+                    onChange={handleChange}
+                  >
+                    {GENERATIVE_MODELS.map(model => (
+                      <option key={model.value} value={model.value}>{model.label}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <Value>{card.generativeModel}</Value>
                 )}
               </Section>
               <Section>
