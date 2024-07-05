@@ -1,7 +1,7 @@
 # src/plugins/music/track.py
 
 import os
-from midiutil import MIDIFile
+from midiutil import MIDIFile # type: ignore
 
 class Track:
     def __init__(self, tempo, instrument):
