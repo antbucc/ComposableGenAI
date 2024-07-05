@@ -9,6 +9,7 @@ import {
 } from './DetailModal.styles';
 import OutputDetailContainer from '../OutputDetailContainer/OutputDetailContainer';
 import GuitarTabsConverterContainer from '../GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer'; // Import plugin containers
+import ABCConverterContainer from '../ABCConverterPluginContainer/ABCConverterPluginContainer';
 
 interface DetailModalProps {
   title: string;
@@ -24,6 +25,8 @@ const DetailModal: React.FC<DetailModalProps> = ({ title, onRequestClose, conten
         return <GuitarTabsConverterContainer card={card} />;
       case 'output-detail':
         return <OutputDetailContainer output={card.output.generatedText} />;
+        case 'abc-converter':
+        return <ABCConverterContainer card={card} />;
       default:
         return <p>{content} plugin is not yet implemented.</p>;
     }
