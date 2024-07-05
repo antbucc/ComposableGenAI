@@ -1,13 +1,10 @@
 // src/components/PluginSection/PluginSection.tsx
 
 import React, { useState } from 'react';
-import {
-  SectionContent,
-  PluginItem,
-  PluginContent,
-} from './PluginSection.styles';
-import GuitarTabsConverterPluginSection from '../GuitarTabsConverterPluginSection/GuitarTabsConverterPluginSection';
-import ABCConverterPluginSection from '../ABCConverterPluginSection/ABCConverterPluginSection';
+import { SectionContent, PluginItem, Button } from './PluginSection.styles';
+import GuitarTabsConverterContainer from '../GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer';
+import DetailModal from '../DetailModal/DetailModal';
+import { openNewIcon } from '../../assets';
 
 interface PluginSectionProps {
   plugins: string[];
@@ -17,16 +14,18 @@ interface PluginSectionProps {
 const PluginSection: React.FC<PluginSectionProps> = ({ plugins, card }) => {
   const [selectedPlugin, setSelectedPlugin] = useState<string | null>(null);
 
-  const handlePluginClick = (plugin: string) => {
-    setSelectedPlugin(selectedPlugin === plugin ? null : plugin);
+  const handleOpenModal = (plugin: string) => {
+    setSelectedPlugin(plugin);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPlugin(null);
   };
 
   const renderPluginContent = () => {
     switch (selectedPlugin) {
       case 'guitar-tabs-converter':
-        return <GuitarTabsConverterPluginSection card={card} />;
-      case 'abc-converter':
-        return <ABCConverterPluginSection card={card} />;
+        return <GuitarTabsConverterContainer card={card} />;
       // Add cases for other plugins here
       default:
         return <p>{selectedPlugin} plugin is not yet implemented.</p>;
@@ -37,14 +36,17 @@ const PluginSection: React.FC<PluginSectionProps> = ({ plugins, card }) => {
     <SectionContent>
       {plugins.map((plugin) => (
         <PluginItem key={plugin}>
-          <div onClick={() => handlePluginClick(plugin)}>
-            {plugin}
-          </div>
-          <PluginContent isCollapsed={selectedPlugin !== plugin}>
-            {selectedPlugin === plugin && renderPluginContent()}
-          </PluginContent>
+          <div>{plugin}</div>
+          <Button onClick={() => handleOpenModal(plugin)}>
+            <img src={openNewIcon} alt="Open" />
+          </Button>
         </PluginItem>
       ))}
+      {selectedPlugin && (
+        <DetailModal title={selectedPlugin} onRequestClose={handleCloseModal}>
+          {renderPluginContent()}
+        </DetailModal>
+      )}
     </SectionContent>
   );
 };

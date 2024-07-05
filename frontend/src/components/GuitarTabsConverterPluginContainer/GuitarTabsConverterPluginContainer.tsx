@@ -1,7 +1,9 @@
+// src/components/GuitarTabsConverterContainer/GuitarTabsConverterContainer.tsx
+
 import React, { useState } from 'react';
 import { executePlugin } from '../../services/api';
 import {
-  GuitarTabsConverterPluginContainer,
+  GuitarTabsConverterContainerWrapper,
   ParametersContainer,
   InstrumentContainer,
   Input,
@@ -12,11 +14,11 @@ import {
   DownloadButton,
   ButtonContainer,
   ExecuteButton,
-} from './GuitarTabsConverterPluginSection.styles';
+} from './GuitarTabsConverterPluginContainer.styles';
 import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
 import { MUSIC_INSTRUMENTS } from '../../config/config';
 
-interface GuitarTabsToPluginProps {
+interface GuitarTabsConverterContainerProps {
   card: any;
 }
 
@@ -30,8 +32,7 @@ interface PluginFile {
   wav: string;
 }
 
-
-const GuitarTabsConverterPluginSection: React.FC<GuitarTabsToPluginProps> = ({ card }) => {
+const GuitarTabsConverterContainer: React.FC<GuitarTabsConverterContainerProps> = ({ card }) => {
   const [tempo, setTempo] = useState<number>(120);
   const [repetitions, setRepetitions] = useState<number>(1);
   const [instrument, setInstrument] = useState<string>(MUSIC_INSTRUMENTS[0]);
@@ -83,7 +84,10 @@ const GuitarTabsConverterPluginSection: React.FC<GuitarTabsToPluginProps> = ({ c
   };
 
   return (
-    <GuitarTabsConverterPluginContainer>
+    <GuitarTabsConverterContainerWrapper>
+      <h2>Card Output</h2>
+      <p>{card.output.generatedText}</p>
+      <h3>Parameters</h3>
       <ParametersContainer>
         <div>
           <label>Tempo:</label>
@@ -135,8 +139,8 @@ const GuitarTabsConverterPluginSection: React.FC<GuitarTabsToPluginProps> = ({ c
           <audio ref={audioRef} onEnded={() => setIsPlaying((prev) => prev.map(() => false))} />
         </OutputContainer>
       )}
-    </GuitarTabsConverterPluginContainer>
+    </GuitarTabsConverterContainerWrapper>
   );
 };
 
-export default GuitarTabsConverterPluginSection;
+export default GuitarTabsConverterContainer;
