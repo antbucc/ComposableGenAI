@@ -10,8 +10,9 @@ import { Node, Edge } from 'react-flow-renderer';
 import { TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
-import OutputDetailModal from '../../components/OutputDetailModal/OutputDetailModal';
 import InstructionsPopup from '../../components/InstructionsPopup/InstructionsPopup';
+import DetailModal from '../../components/DetailModal/DetailModal';
+import OutputDetailContainer from '../../components/OutputDetailContainer/OutputDetailContainer';
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -221,7 +222,9 @@ const TaskDetailPage: React.FC = () => {
         />
       ))}
       {modalOutput && (
-        <OutputDetailModal output={modalOutput} onRequestClose={handleCloseModal} />
+        <DetailModal title="Execution Output" onRequestClose={handleCloseModal}>
+          <OutputDetailContainer output={modalOutput} />
+        </DetailModal>
       )}
       {showInstructions && <InstructionsPopup onClose={closeInstructions} />}
     </PageContainer>
