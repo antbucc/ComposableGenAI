@@ -2,19 +2,15 @@
 
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import DetailModal from '../DetailModal/DetailModal';
 import {
-  ModalOverlay,
-  ModalContainer,
-  ModalHeader,
-  ModalTitle,
-  CloseButton,
   ModalContent,
   CopyButton,
   ToggleContainer,
   ToggleButton,
   InfoLabel
 } from './OutputDetailModal.styles';
-import {copyIcon, doneIcon} from '../../assets';
+import { copyIcon, doneIcon } from '../../assets';
 
 interface OutputDetailModalProps {
   output: string;
@@ -40,26 +36,20 @@ const OutputDetailModal: React.FC<OutputDetailModalProps> = ({ output, onRequest
   };
 
   return (
-    <ModalOverlay>
-      <ModalContainer>
-        <ModalHeader>
-          <ModalTitle>Output Details</ModalTitle>
-          <ToggleContainer>
-            <InfoLabel>If the output is not displayed correctly, click here to show it raw:</InfoLabel>
-            <ToggleButton onClick={toggleDisplayMode}>
-              {isMarkdown ? 'Show Raw' : 'Show Markdown'}
-            </ToggleButton>
-          </ToggleContainer>
-          <CloseButton onClick={onRequestClose}>×</CloseButton>
-        </ModalHeader>
-        <ModalContent>
-          {isMarkdown ? <ReactMarkdown>{output}</ReactMarkdown> : <pre>{output}</pre>}
-          <CopyButton onClick={handleCopyClick}>
-            <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
-          </CopyButton>
-        </ModalContent>
-      </ModalContainer>
-    </ModalOverlay>
+    <DetailModal title="Output Details" onRequestClose={onRequestClose}>
+      <ModalContent>
+        <ToggleContainer>
+          <InfoLabel>If the output is not displayed correctly, click here to show it raw:</InfoLabel>
+          <ToggleButton onClick={toggleDisplayMode}>
+            {isMarkdown ? 'Show Raw' : 'Show Markdown'}
+          </ToggleButton>
+        </ToggleContainer>
+        {isMarkdown ? <ReactMarkdown>{output}</ReactMarkdown> : <pre>{output}</pre>}
+        <CopyButton onClick={handleCopyClick}>
+          <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
+        </CopyButton>
+      </ModalContent>
+    </DetailModal>
   );
 };
 
