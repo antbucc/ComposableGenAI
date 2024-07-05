@@ -1,3 +1,5 @@
+// src/components/DraggablePopover/DraggablePopover.tsx
+
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import Draggable from 'react-draggable';
 import {
@@ -51,7 +53,7 @@ interface DraggablePopoverProps {
   index: number;
   onExecute: (id: string) => void;
   onCardUpdate: (card: any) => void;
-  onOpenModal: (output: string) => void;
+  onOpenModal: (plugin: string, card: any) => void; // Updated to pass plugin and card data
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
@@ -60,7 +62,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   index,
   onExecute,
   onCardUpdate,
-  onOpenModal
+  onOpenModal // Updated to handle modal opening
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -200,10 +202,8 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     }
   };
 
-  const handleModalOpen = () => {
-    if (card && card.output && card.output.generatedText) {
-      onOpenModal(card.output.generatedText);
-    }
+  const handleModalOpen = (plugin: string) => {
+    onOpenModal(plugin, card);
   };
 
   return (
@@ -348,7 +348,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                   <CopyButton onClick={handleCopyClick}>
                     <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
                   </CopyButton>
-                  <ModalButton onClick={handleModalOpen}>
+                  <ModalButton onClick={() => handleModalOpen('output-detail')}>
                     <img src={openNewIcon} alt="Open" />
                   </ModalButton>
                 </ButtonGroup>
@@ -392,7 +392,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                     onClose={() => setIsPluginSelectorVisible(false)}
                   />
                 )}
-                <PluginSection plugins={plugins} card={card} />
+                <PluginSection plugins={plugins} card={card} onOpenModal={handleModalOpen} />
               </Section>
             </PopoverContent>
             <ButtonContainer>

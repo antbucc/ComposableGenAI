@@ -13,6 +13,7 @@ import { ReactComponent as AddIcon } from '../../assets/add.svg';
 import InstructionsPopup from '../../components/InstructionsPopup/InstructionsPopup';
 import DetailModal from '../../components/DetailModal/DetailModal';
 import OutputDetailContainer from '../../components/OutputDetailContainer/OutputDetailContainer';
+import GuitarTabsConverterContainer from '../../components/GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer'; // Import plugin containers
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +24,7 @@ const TaskDetailPage: React.FC = () => {
   const [openPopovers, setOpenPopovers] = useState<string[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
-  const [modalOutput, setModalOutput] = useState<string | null>(null);
+  const [modalOutput, setModalOutput] = useState<{ plugin: string; card: any } | null>(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
   const handleDeleteEdge = async (edgeId: string) => {
@@ -175,20 +176,33 @@ const TaskDetailPage: React.FC = () => {
     }
   };
 
-  const handleOpenModal = (output: string) => {
-    setModalOutput(output);
+  const handleOpenModal = (plugin: string, card: any) => {
+    setModalOutput({ plugin, card });
   };
 
   const handleCloseModal = () => {
     setModalOutput(null);
   };
 
-  const closeInstructions = () => {
-    setShowInstructions(false);
+  const renderPluginContent = () => {
+    if (modalOutput) {
+      switch (modalOutput.plugin) {
+        case 'guitar-tabs-converter':
+          return <GuitarTabsConverterContainer card={modalOutput.card} />;
+        // Add cases for other plugins here
+        default:
+          return <p>{modalOutput.plugin} plugin is not yet implemented.</p>;
+      }
+    }
+    return null;
   };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+
+  function closeInstructions(): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <PageContainer>
@@ -222,8 +236,8 @@ const TaskDetailPage: React.FC = () => {
         />
       ))}
       {modalOutput && (
-        <DetailModal title="Execution Output" onRequestClose={handleCloseModal}>
-          <OutputDetailContainer output={modalOutput} />
+        <DetailModal title={modalOutput.plugin} onRequestClose={handleCloseModal}>
+          {renderPluginContent()}
         </DetailModal>
       )}
       {showInstructions && <InstructionsPopup onClose={closeInstructions} />}
