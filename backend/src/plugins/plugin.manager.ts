@@ -1,14 +1,13 @@
 // src/plugins/plugin.manager.ts
-
 import { PluginInterface } from './plugin.interface';
-import { MusicPlugin } from './music/music.plugin';
+import { GuitarTabsConverterPlugin } from './guitar-tabs-converter/guitar-tabs-converter.plugin';
 
 interface PluginRegistry {
     [key: string]: PluginInterface;
 }
 
 const plugins: PluginRegistry = {
-    'music': new MusicPlugin(),
+    'guitar-tabs-converter': new GuitarTabsConverterPlugin(),
     // Add other plugins here as they are created
 };
 

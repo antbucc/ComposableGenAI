@@ -1,4 +1,4 @@
-# src/plugins/music/main.py
+# src/plugins/guitar-tabs-converter/main.py
 
 import os
 import argparse

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const MusicPluginContainer = styled.div`
+export const GuitarTabsConverterPluginContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;

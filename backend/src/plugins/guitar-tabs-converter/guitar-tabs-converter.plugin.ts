@@ -1,19 +1,19 @@
-// src/plugins/music/music.plugin.ts
+// src/plugins/guitar-tabs-converter/guitar-tabs-converter.plugin.ts
 
 import * as fs from 'fs';
 import { exec } from 'child_process';
 import { PluginInterface } from '../plugin.interface';
 import { getMIDIInstrumentNumber } from '../../types/MIDIInstruments';
 
-interface MusicPluginParams {
+interface GuitarTabsConverterPluginParams {
     input: string;
     tempo: number;
     repetitions: number;
     instrument: string; // Use instrument name
 }
 
-export class MusicPlugin implements PluginInterface {
-    execute(params: MusicPluginParams): Promise<{ filename: string, content: string }[]> {
+export class GuitarTabsConverterPlugin implements PluginInterface {
+    execute(params: GuitarTabsConverterPluginParams): Promise<{ filename: string, content: string }[]> {
         return new Promise((resolve, reject) => {
             const { input, tempo, repetitions, instrument } = params;
 
@@ -23,8 +23,8 @@ export class MusicPlugin implements PluginInterface {
                 return reject(new Error('Invalid instrument name'));
             }
 
-            const inputFilePath = 'src/plugins/music/input_tabs.txt';
-            const outputDir = 'src/plugins/music/output/'; // Fixed output directory
+            const inputFilePath = 'src/plugins/guitar-tabs-converter/input_tabs.txt';
+            const outputDir = 'src/plugins/guitar-tabs-converter/output/'; // Fixed output directory
 
             // Write the input to a file
             fs.writeFileSync(inputFilePath, input);
@@ -35,7 +35,7 @@ export class MusicPlugin implements PluginInterface {
             }
 
             // Construct the command
-            const command = `python3 src/plugins/music/main.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrumentNumber}`;
+            const command = `python3 src/plugins/guitar-tabs-converter/main.py ${inputFilePath} ${tempo} ${repetitions} ${outputDir} ${instrumentNumber}`;
 
             // Execute the script
             exec(command, (error, stdout, stderr) => {

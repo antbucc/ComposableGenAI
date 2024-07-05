@@ -1,4 +1,4 @@
-# src/plugins/music/tabs.py
+# src/plugins/guitar-tabs-converter/tabs.py
 
 class Tabs:
     def __init__(self, content):

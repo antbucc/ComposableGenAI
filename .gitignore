@@ -13,12 +13,12 @@
 # plugins data
 
 # music
-/backend/src/plugins/music/output
-/backend/src/plugins/music/input_tabs.txt
+/backend/src/plugins/guitar-tabs-converter/output
+/backend/src/plugins/guitar-tabs-converter/input_tabs.txt
 
 # python
 
-/backend/src/plugins/music/__pycache__
+/backend/src/plugins/guitar-tabs-converter/__pycache__
 
 
 # misc

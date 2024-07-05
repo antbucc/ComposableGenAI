@@ -1,5 +1,4 @@
-# src/plugins/music/track.py
-
+# src/plugins/guitar-tabs-converter/track.py
 import os
 from midiutil import MIDIFile # type: ignore
 

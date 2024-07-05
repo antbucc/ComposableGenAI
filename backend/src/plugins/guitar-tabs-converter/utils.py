@@ -1,4 +1,4 @@
-# src/plugins/music/utils.py
+# src/plugins/guitar-tabs-converter/utils.py
 
 import re
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { executePlugin } from '../../services/api';
 import {
-  MusicPluginContainer,
+  GuitarTabsConverterPluginContainer,
   ParametersContainer,
   InstrumentContainer,
   Input,
@@ -12,11 +12,11 @@ import {
   DownloadButton,
   ButtonContainer,
   ExecuteButton,
-} from './MusicPluginSection.styles';
+} from './GuitarTabsConverterPluginSection.styles';
 import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
 import { MUSIC_INSTRUMENTS } from '../../config/config';
 
-interface MusicPluginSectionProps {
+interface GuitarTabsToPluginProps {
   card: any;
 }
 
@@ -31,7 +31,7 @@ interface PluginFile {
 }
 
 
-const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
+const GuitarTabsConverterPluginSection: React.FC<GuitarTabsToPluginProps> = ({ card }) => {
   const [tempo, setTempo] = useState<number>(120);
   const [repetitions, setRepetitions] = useState<number>(1);
   const [instrument, setInstrument] = useState<string>(MUSIC_INSTRUMENTS[0]);
@@ -48,7 +48,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
     };
 
     try {
-      const response: File[] = await executePlugin('music', params);
+      const response: File[] = await executePlugin('guitar-tabs-converter', params);
       const newFiles: Record<string, PluginFile> = response.reduce((acc: Record<string, PluginFile>, file) => {
         const fileType = file.filename.endsWith('.mid') ? 'midi' : 'wav';
         const fileName = file.filename.split('.')[0];
@@ -64,7 +64,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
       setFiles(Object.values(newFiles));
       setIsPlaying(new Array(Object.values(newFiles).length).fill(false));
     } catch (error) {
-      console.error('Error executing music plugin:', error);
+      console.error('Error executing guitar-tabs-converter plugin:', error);
     }
   };
 
@@ -83,7 +83,7 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
   };
 
   return (
-    <MusicPluginContainer>
+    <GuitarTabsConverterPluginContainer>
       <ParametersContainer>
         <div>
           <label>Tempo:</label>
@@ -135,8 +135,8 @@ const MusicPluginSection: React.FC<MusicPluginSectionProps> = ({ card }) => {
           <audio ref={audioRef} onEnded={() => setIsPlaying((prev) => prev.map(() => false))} />
         </OutputContainer>
       )}
-    </MusicPluginContainer>
+    </GuitarTabsConverterPluginContainer>
   );
 };
 
-export default MusicPluginSection;
+export default GuitarTabsConverterPluginSection;

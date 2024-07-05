@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import MusicPluginSection from '../MusicPluginSection/MusicPluginSection';
 import {
   SectionContent,
   PluginItem,
   PluginContent,
 } from './PluginSection.styles';
+import GuitarTabsConverterPluginSection from '../GuitarTabsConverterPluginSection/GuitarTabsConverterPluginSection';
 
 interface PluginSectionProps {
   plugins: string[];
@@ -20,8 +20,8 @@ const PluginSection: React.FC<PluginSectionProps> = ({ plugins, card }) => {
 
   const renderPluginContent = () => {
     switch (selectedPlugin) {
-      case 'music':
-        return <MusicPluginSection card={card} />;
+      case 'guitar-tabs-converter':
+        return <GuitarTabsConverterPluginSection card={card} />;
       // Add cases for other plugins here
       default:
         return <p>{selectedPlugin} plugin is not yet implemented.</p>;
