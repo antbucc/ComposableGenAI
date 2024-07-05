@@ -7,6 +7,8 @@ import {
   ABCConverterContainerWrapper,
   OutputContainer,
   CopyButton,
+  TextArea,
+  ButtonGroup,
 } from './ABCConverterPluginContainer.styles';
 import { copyIcon, doneIcon } from '../../assets';
 
@@ -16,7 +18,20 @@ interface ABCConverterContainerProps {
 
 const cleanABCOutput = (output: string): string => {
   const lines = output.split('\n');
-  const abcLines = lines.filter(line => /^[A-Z]:/.test(line) || /^[A-Ga-g]/.test(line));
+  const validHeaders = ['X', 'T', 'M', 'L', 'R', 'K'];
+  const abcLines = lines.filter(line => {
+    const trimmedLine = line.trim();
+    if (!trimmedLine) return false; // Ignore empty lines
+
+    const headerMatch = trimmedLine.match(/^([A-Za-z]):/);
+    if (headerMatch) {
+      return validHeaders.includes(headerMatch[1].toUpperCase());
+    }
+
+    // Check if the line starts with music notation (A-G, a-g) or a valid header
+    return /^[A-Ga-g]/.test(trimmedLine);
+  });
+
   return abcLines.join('\n');
 };
 
@@ -80,10 +95,15 @@ const ABCConverterContainer: React.FC<ABCConverterContainerProps> = ({ card }) =
     <ABCConverterContainerWrapper>
       <h2>Refined ABC Notation</h2>
       <OutputContainer>
-        <pre>{abcCode}</pre>
-        <CopyButton onClick={handleCopyClick}>
-          <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
-        </CopyButton>
+        <TextArea
+          value={abcCode}
+          onChange={e => setAbcCode(e.target.value)}
+        />
+        <ButtonGroup>
+          <CopyButton onClick={handleCopyClick}>
+            <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />
+          </CopyButton>
+        </ButtonGroup>
       </OutputContainer>
       <h3>Music Representation</h3>
       <div id="abcjs-container" />
