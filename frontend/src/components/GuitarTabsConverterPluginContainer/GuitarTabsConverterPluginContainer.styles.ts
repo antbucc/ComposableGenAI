@@ -72,3 +72,26 @@ export const ExecuteButton = styled.button`
   display: flex;
   align-items: center;
 `;
+export const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ToggleButton = styled.button`
+  background: orange;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+
+  &:hover {
+    background: #ff8c00;
+  }
+`;
+
+export const InfoLabel = styled.p`
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+`;

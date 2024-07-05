@@ -1,7 +1,6 @@
-// src/components/GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer.tsx
-
 import React, { useState } from 'react';
 import { executePlugin } from '../../services/api';
+import ReactMarkdown from 'react-markdown';
 import {
   GuitarTabsConverterContainerWrapper,
   ParametersContainer,
@@ -14,8 +13,11 @@ import {
   DownloadButton,
   ButtonContainer,
   ExecuteButton,
+  ToggleContainer,
+  ToggleButton,
+  InfoLabel
 } from './GuitarTabsConverterPluginContainer.styles';
-import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
+import { playIcon, pauseIcon, downloadIcon, executeDownIcon, copyIcon, doneIcon } from '../../assets';
 import { MUSIC_INSTRUMENTS } from '../../config/config';
 
 interface GuitarTabsConverterContainerProps {
@@ -38,6 +40,8 @@ const GuitarTabsConverterContainer: React.FC<GuitarTabsConverterContainerProps> 
   const [instrument, setInstrument] = useState<string>(MUSIC_INSTRUMENTS[0]);
   const [files, setFiles] = useState<PluginFile[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean[]>([]);
+  const [isCopying, setIsCopying] = useState(false);
+  const [isMarkdown, setIsMarkdown] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement>(null);
 
   const handleExecute = async () => {
@@ -83,11 +87,29 @@ const GuitarTabsConverterContainer: React.FC<GuitarTabsConverterContainerProps> 
     }
   };
 
+  const handleCopyClick = async () => {
+    try {
+      await navigator.clipboard.writeText(card.output.generatedText);
+      setIsCopying(true);
+      setTimeout(() => setIsCopying(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy text:', error);
+    }
+  };
+
+  const toggleDisplayMode = () => {
+    setIsMarkdown(!isMarkdown);
+  };
+
   return (
     <GuitarTabsConverterContainerWrapper>
-      <h2>Card Output</h2>
-      <p>{card.output.generatedText}</p>
-      <h3>Parameters</h3>
+      <ToggleContainer>
+        <InfoLabel>If the output is not displayed correctly, click here to show it raw or formatted:</InfoLabel>
+        <ToggleButton onClick={toggleDisplayMode}>
+          {isMarkdown ? 'Show Raw' : 'Show Markdown'}
+        </ToggleButton>
+      </ToggleContainer>
+      {isMarkdown ? <ReactMarkdown>{card.output.generatedText}</ReactMarkdown> : <pre>{card.output.generatedText}</pre>}
       <ParametersContainer>
         <div>
           <label>Tempo:</label>
