@@ -1,3 +1,5 @@
+// src/components/PluginSection/PluginSection.tsx
+
 import React, { useState } from 'react';
 import {
   SectionContent,
@@ -5,6 +7,7 @@ import {
   PluginContent,
 } from './PluginSection.styles';
 import GuitarTabsConverterPluginSection from '../GuitarTabsConverterPluginSection/GuitarTabsConverterPluginSection';
+import ABCConverterPluginSection from '../ABCConverterPluginSection/ABCConverterPluginSection';
 
 interface PluginSectionProps {
   plugins: string[];
@@ -22,6 +25,8 @@ const PluginSection: React.FC<PluginSectionProps> = ({ plugins, card }) => {
     switch (selectedPlugin) {
       case 'guitar-tabs-converter':
         return <GuitarTabsConverterPluginSection card={card} />;
+      case 'abc-converter':
+        return <ABCConverterPluginSection card={card} />;
       // Add cases for other plugins here
       default:
         return <p>{selectedPlugin} plugin is not yet implemented.</p>;

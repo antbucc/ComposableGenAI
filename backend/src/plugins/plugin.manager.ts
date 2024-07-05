@@ -1,6 +1,6 @@
-// src/plugins/plugin.manager.ts
 import { PluginInterface } from './plugin.interface';
 import { GuitarTabsConverterPlugin } from './guitar-tabs-converter/guitar-tabs-converter.plugin';
+import { ABCConverterPlugin } from './abc-converter/abc-converter.plugin';
 
 interface PluginRegistry {
     [key: string]: PluginInterface;
@@ -8,6 +8,7 @@ interface PluginRegistry {
 
 const plugins: PluginRegistry = {
     'guitar-tabs-converter': new GuitarTabsConverterPlugin(),
+    'abc-converter': new ABCConverterPlugin(),
     // Add other plugins here as they are created
 };
 
