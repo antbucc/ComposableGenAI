@@ -24,7 +24,7 @@ const TaskDetailPage: React.FC = () => {
   const [openPopovers, setOpenPopovers] = useState<string[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
-  const [modalOutput, setModalOutput] = useState<{ plugin: string; card: any } | null>(null);
+  const [modalOutput, setModalOutput] = useState<{ content: string; card: any } | null>(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
   const handleDeleteEdge = async (edgeId: string) => {
@@ -176,22 +176,23 @@ const TaskDetailPage: React.FC = () => {
     }
   };
 
-  const handleOpenModal = (plugin: string, card: any) => {
-    setModalOutput({ plugin, card });
+  const handleOpenModal = (content: string, card: any) => {
+    setModalOutput({ content, card });
   };
 
   const handleCloseModal = () => {
     setModalOutput(null);
   };
 
-  const renderPluginContent = () => {
+  const renderModalContent = () => {
     if (modalOutput) {
-      switch (modalOutput.plugin) {
+      switch (modalOutput.content) {
         case 'guitar-tabs-converter':
           return <GuitarTabsConverterContainer card={modalOutput.card} />;
-        // Add cases for other plugins here
+        case 'output-detail':
+          return <OutputDetailContainer output={modalOutput.card.output.generatedText} />;
         default:
-          return <p>{modalOutput.plugin} plugin is not yet implemented.</p>;
+          return <p>{modalOutput.content} plugin is not yet implemented.</p>;
       }
     }
     return null;
@@ -236,8 +237,8 @@ const TaskDetailPage: React.FC = () => {
         />
       ))}
       {modalOutput && (
-        <DetailModal title={modalOutput.plugin} onRequestClose={handleCloseModal}>
-          {renderPluginContent()}
+        <DetailModal title={modalOutput.content} onRequestClose={handleCloseModal}>
+          {renderModalContent()}
         </DetailModal>
       )}
       {showInstructions && <InstructionsPopup onClose={closeInstructions} />}

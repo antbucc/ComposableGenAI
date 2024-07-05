@@ -1,4 +1,4 @@
-// src/components/GuitarTabsConverterContainer/GuitarTabsConverterContainer.tsx
+// src/components/GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer.tsx
 
 import React, { useState } from 'react';
 import { executePlugin } from '../../services/api';
