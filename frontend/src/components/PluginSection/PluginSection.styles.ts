@@ -19,7 +19,8 @@ export const PluginItem = styled.div`
   background-color: #fff;
   text-align: center;
   text-transform: capitalize;
-  padding: 10px;
+  padding: 5px;
+  padding-left: 5px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 

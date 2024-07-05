@@ -1,5 +1,3 @@
-// src/pages/TaskDetailPage/TaskDetailPage.tsx
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById, executeCard, deleteCard, removeNextCard } from '../../services/api';
@@ -12,8 +10,6 @@ import DraggablePopover from '../../components/DraggablePopover/DraggablePopover
 import { ReactComponent as AddIcon } from '../../assets/add.svg';
 import InstructionsPopup from '../../components/InstructionsPopup/InstructionsPopup';
 import DetailModal from '../../components/DetailModal/DetailModal';
-import OutputDetailContainer from '../../components/OutputDetailContainer/OutputDetailContainer';
-import GuitarTabsConverterContainer from '../../components/GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer'; // Import plugin containers
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -184,20 +180,6 @@ const TaskDetailPage: React.FC = () => {
     setModalOutput(null);
   };
 
-  const renderModalContent = () => {
-    if (modalOutput) {
-      switch (modalOutput.content) {
-        case 'guitar-tabs-converter':
-          return <GuitarTabsConverterContainer card={modalOutput.card} />;
-        case 'output-detail':
-          return <OutputDetailContainer output={modalOutput.card.output.generatedText} />;
-        default:
-          return <p>{modalOutput.content} plugin is not yet implemented.</p>;
-      }
-    }
-    return null;
-  };
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -237,9 +219,12 @@ const TaskDetailPage: React.FC = () => {
         />
       ))}
       {modalOutput && (
-        <DetailModal title={modalOutput.content} onRequestClose={handleCloseModal}>
-          {renderModalContent()}
-        </DetailModal>
+        <DetailModal
+          title={modalOutput.content}
+          onRequestClose={handleCloseModal}
+          content={modalOutput.content}
+          card={modalOutput.card}
+        />
       )}
       {showInstructions && <InstructionsPopup onClose={closeInstructions} />}
     </PageContainer>

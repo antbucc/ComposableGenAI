@@ -1,5 +1,3 @@
-// src/components/DetailModal/DetailModal.tsx
-
 import React from 'react';
 import {
   ModalOverlay,
@@ -9,14 +7,28 @@ import {
   CloseButton,
   ModalContent,
 } from './DetailModal.styles';
+import OutputDetailContainer from '../OutputDetailContainer/OutputDetailContainer';
+import GuitarTabsConverterContainer from '../GuitarTabsConverterPluginContainer/GuitarTabsConverterPluginContainer'; // Import plugin containers
 
 interface DetailModalProps {
   title: string;
   onRequestClose: () => void;
-  children: React.ReactNode;
+  content: string;
+  card: any;
 }
 
-const DetailModal: React.FC<DetailModalProps> = ({ title, onRequestClose, children }) => {
+const DetailModal: React.FC<DetailModalProps> = ({ title, onRequestClose, content, card }) => {
+  const renderModalContent = () => {
+    switch (content) {
+      case 'guitar-tabs-converter':
+        return <GuitarTabsConverterContainer card={card} />;
+      case 'output-detail':
+        return <OutputDetailContainer output={card.output.generatedText} />;
+      default:
+        return <p>{content} plugin is not yet implemented.</p>;
+    }
+  };
+
   return (
     <ModalOverlay>
       <ModalContainer>
@@ -25,7 +37,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ title, onRequestClose, childr
           <CloseButton onClick={onRequestClose}>×</CloseButton>
         </ModalHeader>
         <ModalContent>
-          {children}
+          {renderModalContent()}
         </ModalContent>
       </ModalContainer>
     </ModalOverlay>
