@@ -23,6 +23,8 @@ export const ModalContainer = styled.div`
   height: 80vh;
   max-width: 1200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 12;
 `;
@@ -54,7 +56,7 @@ export const CloseButton = styled.button`
 `;
 
 export const ModalContent = styled.div`
-  max-height: calc(80vh - 100px);
+  flex: 1;
   overflow-y: auto;
   padding-right: 10px;
 

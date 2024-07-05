@@ -7,7 +7,6 @@ import {
   ABCConverterContainerWrapper,
   OutputContainer,
   CopyButton,
-  TextArea,
   ButtonGroup,
 } from './ABCConverterPluginContainer.styles';
 import { copyIcon, doneIcon } from '../../assets';
@@ -95,10 +94,7 @@ const ABCConverterContainer: React.FC<ABCConverterContainerProps> = ({ card }) =
     <ABCConverterContainerWrapper>
       <h2>Refined ABC Notation</h2>
       <OutputContainer>
-        <TextArea
-          value={abcCode}
-          onChange={e => setAbcCode(e.target.value)}
-        />
+        <pre>{abcCode}</pre>
         <ButtonGroup>
           <CopyButton onClick={handleCopyClick}>
             <img src={isCopying ? doneIcon : copyIcon} alt="Copy" />

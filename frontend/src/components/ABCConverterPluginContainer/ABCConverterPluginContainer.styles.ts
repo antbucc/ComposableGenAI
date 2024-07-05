@@ -22,36 +22,19 @@ export const OutputContainer = styled.div`
 `;
 
 export const CopyButton = styled.button`
-  background: orange;
-  padding: 5px 10px;
-  border: 2px solid black;
-  border-radius: 5px;
+  background: none;
+  border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  position: relative;
+  margin-left: 10px;
+  padding: 5px;
 
   img {
-    width: 15px;
-    height: 15px;
-    margin-right: 3px;
-    filter: brightness(0); 
-  }
-
-  &:hover {
-    background: #ff8c00;
+    width: 24px;
+    height: 24px;
   }
 `;
 
-export const TextArea = styled.textarea`
-  width: 100%;
-  height: 200px;
-  padding: 10px;
-  font-family: monospace;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
+
 
 export const ButtonGroup = styled.div`
   display: flex;
