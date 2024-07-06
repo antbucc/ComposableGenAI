@@ -46,7 +46,7 @@ export async function generatePrompt(cardId: string): Promise<string> {
     `;
 
     const exampleOutputSection = exampleOutput ? `
-        ##Respond using this format and structure, nothing less, nothing more.Do not include any other additional information or explaination of the output.
+        ## Respond using this format and structure, nothing less, nothing more. Do not include any other additional information or explanation of the output.
         ## Example Outputs
         ${exampleOutput}
     ` : '';
@@ -58,12 +58,11 @@ export async function generatePrompt(cardId: string): Promise<string> {
 
         ${contextSection}
 
-       
         ${exampleOutputSection}
 
         ## Note
         Ensure the answer is exhaustive and clear even without reading the context above. Use Markdown format for better readability.
-        Do not include any expaination of the output or introduction of the answer.
+        Do not include any explanation of the output or introduction of the answer.
     `;
     console.log(structuredPrompt);
     return structuredPrompt.trim();
@@ -134,4 +133,159 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
     const enhancedPrompt = await enhancePrompt(`${systemMessage}\n\n${basePrompt}`);
 
     return enhancedPrompt.trim();
+}
+
+// src/cardSequenceGenerator.ts
+
+/**
+ * Generates a sequence of interconnected cards based on the provided task details.
+ * 
+ * @param name - The title of the task.
+ * @param objective - The objective of the task.
+ * @param generativeModel - The generative model to be used.
+ * @returns The generated prompt string for creating interconnected cards.
+ */
+export async function generateCardSequencePrompt(name: string, objective: string, generativeModel: string): Promise<string> {
+    const cardSequencePrompt = `
+**Instructions for Card Generation**:
+
+You are an advanced AI designed to generate a sequence of interconnected cards. Each card should contribute towards accomplishing the overall task defined by the given title and objective. Follow the guidelines below to ensure the cards are coherent, relevant, and logically structured. Depending on the task's complexity, the cards can form either a linear sequence or a more complex graph structure with branching paths and dependencies.
+
+### Guidelines:
+
+1. **Number of Cards**:
+    - Generate an appropriate number of cards to comprehensively cover the task. Aim for at least 5 cards, but the exact number should be sufficient to achieve the objective.
+
+2. **Card Structure**:
+    Each card should include the following attributes:
+    - **Title**: A concise, descriptive title.
+    - **Objective**: The specific goal of the card.
+    - **Prompt**: The main prompt that the card will address.
+    - **Context**: Additional context that helps in understanding the task.
+    - **Example Output**: Two example outputs to illustrate the expected results (if applicable).
+    - **Dependencies**: List any prerequisite cards that need to be completed before this card (if applicable).
+
+3. **Card Content**:
+    - Ensure each card has a clear and distinct objective that contributes to the overall task.
+    - The prompt should be specific and detailed to guide the generative model effectively.
+    - Provide sufficient context for each card to ensure clarity and relevance.
+    - Include example outputs where necessary to demonstrate the expected results.
+    - Define dependencies to establish relationships between the cards, if necessary.
+
+4. **Logical Flow**:
+    - The cards should form a coherent and comprehensive approach to achieving the overall objective.
+    - Clearly define the relationships between the cards, specifying which cards are prerequisites for others.
+    - Consider creating a graph structure where cards can have multiple dependencies and branches if the task is complex. For simpler tasks, a linear sequence of cards is acceptable.
+    - Include a clear statement specifying the order of the cards and their dependencies.
+
+Generate the cards based on the following task:
+
+
+\`\`\`json
+{
+  "cards": [
+    {
+      "title": "Overview of the Renaissance",
+      "objective": "Introduce the Renaissance period and its general significance.",
+      "prompt": "Provide an overview of the Renaissance period, highlighting its major cultural, artistic, and intellectual achievements.",
+      "context": "The Renaissance was a period of great cultural and intellectual activity that spanned from the 14th to the 17th century.",
+      "exampleOutput": "The Renaissance was characterized by a renewed interest in classical antiquity, leading to significant advancements in art, literature, and science.",
+      "dependencies": []
+    },
+    {
+      "title": "Key Figures of the Renaissance",
+      "objective": "Identify and describe the contributions of key figures in the Renaissance.",
+      "prompt": "List and describe the contributions of at least five key figures of the Renaissance in the fields of science and philosophy.",
+      "context": "Important figures such as Leonardo da Vinci, Galileo Galilei, and Nicolaus Copernicus made groundbreaking contributions during the Renaissance.",
+      "exampleOutput": "Leonardo da Vinci was known for his diverse talents and contributions to art and science, including anatomical studies and inventions.",
+      "dependencies": ["Overview of the Renaissance"]
+    },
+    {
+      "title": "Scientific Discoveries of the Renaissance",
+      "objective": "Summarize significant scientific discoveries made during the Renaissance.",
+      "prompt": "Summarize the most significant scientific discoveries and advancements made during the Renaissance period.",
+      "context": "The Renaissance period saw many scientific discoveries that laid the groundwork for modern science, including the heliocentric model of the solar system.",
+      "exampleOutput": "Nicolaus Copernicus proposed the heliocentric model, challenging the geocentric view and revolutionizing astronomy.",
+      "dependencies": ["Overview of the Renaissance"]
+    },
+    {
+      "title": "The Impact of Renaissance Art on Science",
+      "objective": "Explain how advancements in Renaissance art influenced scientific progress.",
+      "prompt": "Explain how advancements in Renaissance art, such as perspective and anatomy, influenced scientific progress.",
+      "context": "Renaissance artists developed techniques like linear perspective and detailed anatomical studies, which enhanced scientific understanding.",
+      "exampleOutput": "The use of linear perspective in art allowed for more accurate depictions of the natural world, aiding scientific illustrations and studies.",
+      "dependencies": ["Overview of the Renaissance", "Key Figures of the Renaissance"]
+    },
+    {
+      "title": "Legacy of the Renaissance in Modern Science",
+      "objective": "Discuss the long-term impact of the Renaissance on modern scientific thought.",
+      "prompt": "Discuss the long-term impact of the Renaissance on modern scientific thought and practices.",
+      "context": "The Renaissance laid the foundation for the Scientific Revolution and the Enlightenment, influencing modern scientific methods and philosophies.",
+      "exampleOutput": "The emphasis on observation and experimentation during the Renaissance led to the development of the scientific method, which is central to modern science.",
+      "dependencies": ["Scientific Discoveries of the Renaissance", "The Impact of Renaissance Art on Science"]
+    }
+  ]
+}
+\`\`\`
+
+**Name**: _Research and Summarize the Impact of the Enlightenment on Modern Science_  
+**Objective**: _To explore and summarize how the Enlightenment period influenced the development of modern scientific thought and practices._  
+**Generative Model**: _GPT_3_5_TURBO_
+
+
+\`\`\`json
+{
+  "cards": [
+    {
+      "title": "Overview of the Enlightenment",
+      "objective": "Introduce the Enlightenment period and its general significance.",
+      "prompt": "Provide an overview of the Enlightenment period, highlighting its major cultural, intellectual, and philosophical achievements.",
+      "context": "The Enlightenment was an intellectual and philosophical movement that dominated the world of ideas in Europe during the 17th and 18th centuries.",
+      "exampleOutput": "The Enlightenment was characterized by an emphasis on reason, science, and individualism, leading to significant advancements in philosophy, political theory, and science.",
+      "dependencies": []
+    },
+    {
+      "title": "Key Figures of the Enlightenment",
+      "objective": "Identify and describe the contributions of key figures in the Enlightenment.",
+      "prompt": "List and describe the contributions of at least five key figures of the Enlightenment in the fields of science and philosophy.",
+      "context": "Important figures such as Isaac Newton, John Locke, and Voltaire made groundbreaking contributions during the Enlightenment.",
+      "exampleOutput": "Isaac Newton was known for his laws of motion and universal gravitation, which laid the foundation for classical mechanics.",
+      "dependencies": ["Overview of the Enlightenment"]
+    },
+    {
+      "title": "Scientific Discoveries of the Enlightenment",
+      "objective": "Summarize significant scientific discoveries made during the Enlightenment.",
+      "prompt": "Summarize the most significant scientific discoveries and advancements made during the Enlightenment period.",
+      "context": "The Enlightenment period saw many scientific discoveries that laid the groundwork for modern science, including advancements in physics, astronomy, and biology.",
+      "exampleOutput": "Isaac Newton's Principia Mathematica formulated the laws of motion and universal gravitation, revolutionizing physics.",
+      "dependencies": ["Overview of the Enlightenment"]
+    },
+    {
+      "title": "The Impact of Enlightenment Philosophy on Science",
+      "objective": "Explain how advancements in Enlightenment philosophy influenced scientific progress.",
+      "prompt": "Explain how advancements in Enlightenment philosophy, such as empiricism and rationalism, influenced scientific progress.",
+      "context": "Enlightenment philosophers developed ideas like empiricism and rationalism, which promoted scientific inquiry and skepticism of traditional authorities.",
+      "exampleOutput": "The empirical approach advocated by John Locke emphasized observation and experimentation, which became fundamental to the scientific method.",
+      "dependencies": ["Overview of the Enlightenment", "Key Figures of the Enlightenment"]
+    },
+    {
+      "title": "Legacy of the Enlightenment in Modern Science",
+      "objective": "Discuss the long-term impact of the Enlightenment on modern scientific thought.",
+      "prompt": "Discuss the long-term impact of the Enlightenment on modern scientific thought and practices.",
+      "context": "The Enlightenment laid the foundation for the Scientific Revolution and modern scientific thought, influencing contemporary scientific methods and philosophies.",
+      "exampleOutput": "The Enlightenment's emphasis on reason and scientific inquiry led to the development of the scientific method, which is central to modern science.",
+      "dependencies": ["Scientific Discoveries of the Enlightenment", "The Impact of Enlightenment Philosophy on Science"]
+    }
+  ]
+}
+\`\`\`
+
+Generate the cards based on the given title and objective:
+
+**Name**: _${name}_  
+**Objective**: _${objective}_  
+**Generative Model**: _${generativeModel}_
+
+    `;
+    return cardSequencePrompt.trim();
 }
