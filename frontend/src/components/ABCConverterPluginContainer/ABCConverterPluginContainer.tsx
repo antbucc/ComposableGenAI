@@ -27,8 +27,8 @@ const cleanABCOutput = (output: string): string => {
       return validHeaders.includes(headerMatch[1].toUpperCase());
     }
 
-    // Check if the line starts with music notation (A-G, a-g) or a valid header
-    return /^[A-Ga-g]/.test(trimmedLine);
+    // Retain lines that start with music notation (A-G, a-g)
+    return /^[A-Ga-g]/.test(trimmedLine) || /^[z]/.test(trimmedLine) || /\|/.test(trimmedLine);
   });
 
   return abcLines.join('\n');

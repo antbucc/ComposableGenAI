@@ -30,11 +30,7 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
         if (generate && generativeModel) {
             // Call the generateTask function if generate is true
             const generatedData = await generateTask(newTask, generativeModel);
-
-            // Debugging log
-            console.log("Generated Data:", JSON.stringify(generatedData, null, 2));
-
-            const generatedCards = generatedData?.cards;
+            const generatedCards = generatedData.cards;
 
             if (!Array.isArray(generatedCards)) {
                 throw new Error("Invalid generated cards format");
@@ -45,13 +41,17 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
 
             // Create and save all the generated cards
             for (const card of generatedCards) {
+                const exampleOutput = Array.isArray(card.exampleOutput)
+                    ? card.exampleOutput.join(' ')
+                    : card.exampleOutput;
+
                 const newCard = await CardModel.create({
                     title: card.title,
                     objective: card.objective,
                     prompt: card.prompt,
                     generativeModel,
                     context: card.context,
-                    exampleOutput: card.exampleOutput,
+                    exampleOutput,
                     previousCards: [],
                     nextCards: [],
                     output: null,

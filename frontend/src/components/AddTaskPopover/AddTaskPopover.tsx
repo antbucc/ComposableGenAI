@@ -1,7 +1,7 @@
-// src/components/AddTaskPopover/AddTaskPopover.tsx
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import { createTask } from '../../services/api';
+import { GENERATIVE_MODELS } from '../../config/config';
 import {
   FormContainer,
   FormLabel,
@@ -9,7 +9,11 @@ import {
   FormButton,
   CloseButton,
   TitleBand,
-} from '../AddCardPopover/AddCardPopover.styles'; // Reuse styles
+  CheckboxLabel,
+  FormSelect,
+  LoadingModal,
+  LoadingText,
+} from './AddTaskPopover.styles'; // Reuse styles
 
 interface AddTaskPopoverProps {
   isOpen: boolean;
@@ -24,13 +28,19 @@ const AddTaskPopover: React.FC<AddTaskPopoverProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [objective, setObjective] = useState('');
+  const [generate, setGenerate] = useState(false);
+  const [generativeModel, setGenerativeModel] = useState(GENERATIVE_MODELS[0].value);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
 
     const newTask = {
       name,
       objective,
+      generate,
+      generativeModel: generate ? generativeModel : undefined,
     };
 
     try {
@@ -39,6 +49,8 @@ const AddTaskPopover: React.FC<AddTaskPopoverProps> = ({
       onRequestClose();
     } catch (error) {
       console.error('Error creating task:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,8 +72,27 @@ const AddTaskPopover: React.FC<AddTaskPopoverProps> = ({
             Objective:
             <FormInput type="text" value={objective} onChange={(e) => setObjective(e.target.value)} required />
           </FormLabel>
+          <CheckboxLabel>
+            <input type="checkbox" checked={generate} onChange={(e) => setGenerate(e.target.checked)} />
+            Generate cards automatically
+          </CheckboxLabel>
+          {generate && (
+            <FormLabel>
+              Generative Model:
+              <FormSelect value={generativeModel} onChange={(e) => setGenerativeModel(e.target.value)}>
+                {GENERATIVE_MODELS.map(model => (
+                  <option key={model.value} value={model.value}>{model.label}</option>
+                ))}
+              </FormSelect>
+            </FormLabel>
+          )}
           <FormButton type="submit">Create Task</FormButton>
         </form>
+        {isLoading && (
+          <LoadingModal>
+            <LoadingText>Your task is being generated...</LoadingText>
+          </LoadingModal>
+        )}
       </FormContainer>
     </Draggable>
   );
