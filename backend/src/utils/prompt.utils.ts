@@ -9,15 +9,15 @@ import { enhancePrompt } from '../services/promptEnhancement.services';
  * @returns The generated prompt string.
  */
 export async function generatePrompt(cardId: string): Promise<string> {
-    const card = await CardModel.findById(cardId).exec();
+  const card = await CardModel.findById(cardId).exec();
 
-    if (!card) {
-        throw new Error('Card not found');
-    }
+  if (!card) {
+    throw new Error('Card not found');
+  }
 
-    const { prompt, context, exampleOutput } = await card.getFormattedDetails();
+  const { prompt, context, exampleOutput } = await card.getFormattedDetails();
 
-    const instructions = `
+  const instructions = `
         ## Task
         **Objective:** ${card.objective}
 
@@ -35,23 +35,23 @@ export async function generatePrompt(cardId: string): Promise<string> {
         - Use bullet points, headings, and clear syntax to structure the response.
     `;
 
-    const mainPromptSection = `
+  const mainPromptSection = `
         ## Main Prompt
         ${prompt}
     `;
 
-    const contextSection = `
+  const contextSection = `
         ## Context
         ${context}
     `;
 
-    const exampleOutputSection = exampleOutput ? `
+  const exampleOutputSection = exampleOutput ? `
         ## Respond using this format and structure, nothing less, nothing more. Do not include any other additional information or explanation of the output.
         ## Example Outputs
         ${exampleOutput}
     ` : '';
 
-    const structuredPrompt = `
+  const structuredPrompt = `
         ${instructions}
 
         ${mainPromptSection}
@@ -64,8 +64,8 @@ export async function generatePrompt(cardId: string): Promise<string> {
         Ensure the answer is exhaustive and clear even without reading the context above. Use Markdown format for better readability.
         Do not include any explanation of the output or introduction of the answer.
     `;
-    console.log(structuredPrompt);
-    return structuredPrompt.trim();
+  console.log(structuredPrompt);
+  return structuredPrompt.trim();
 }
 
 /**
@@ -75,17 +75,17 @@ export async function generatePrompt(cardId: string): Promise<string> {
  * @returns The generated prompt string.
  */
 export async function generateEnhancedPrompt(cardId: string): Promise<string> {
-    // Fetch the card details
-    const card = await CardModel.findById(cardId).exec();
+  // Fetch the card details
+  const card = await CardModel.findById(cardId).exec();
 
-    if (!card) {
-        throw new Error('Card not found');
-    }
+  if (!card) {
+    throw new Error('Card not found');
+  }
 
-    const { prompt, context } = await card.getFormattedDetails();
+  const { prompt, context } = await card.getFormattedDetails();
 
-    // Construct the base prompt
-    const basePrompt = `
+  // Construct the base prompt
+  const basePrompt = `
         ## Task
         **Objective:** ${card.objective}
 
@@ -109,8 +109,8 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
         Ensure the answer is exhaustive and clear even without reading the context above. Provide any relevant citations if needed. Use Markdown format for better readability.
     `;
 
-    // Enhance the base prompt
-    const systemMessage = `
+  // Enhance the base prompt
+  const systemMessage = `
         You are an advanced AI assistant specialized in enhancing user prompts. Your task is to make these prompts more detailed, comprehensive, and engaging by following best practices in prompt engineering.
 
         **Important**: Do not tell the user that they have made a good example. Instead, follow the instructions given and enhance the prompt accordingly.
@@ -130,12 +130,11 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
         Enhance the following prompt while adhering to these guidelines.
     `;
 
-    const enhancedPrompt = await enhancePrompt(`${systemMessage}\n\n${basePrompt}`);
+  const enhancedPrompt = await enhancePrompt(`${systemMessage}\n\n${basePrompt}`);
 
-    return enhancedPrompt.trim();
+  return enhancedPrompt.trim();
 }
 
-// src/cardSequenceGenerator.ts
 
 /**
  * Generates a sequence of interconnected cards based on the provided task details.
@@ -146,7 +145,7 @@ export async function generateEnhancedPrompt(cardId: string): Promise<string> {
  * @returns The generated prompt string for creating interconnected cards.
  */
 export async function generateCardSequencePrompt(name: string, objective: string, generativeModel: string): Promise<string> {
-    const cardSequencePrompt = `
+  const cardSequencePrompt = `
 **Instructions for Card Generation**:
 
 You are an advanced AI designed to generate a sequence of interconnected cards. Each card should contribute towards accomplishing the overall task defined by the given title and objective. Follow the guidelines below to ensure the cards are coherent, relevant, and logically structured. Depending on the task's complexity, the cards can form either a linear sequence or a more complex graph structure with branching paths and dependencies.
@@ -280,6 +279,89 @@ Generate the cards based on the following task:
 }
 \`\`\`
 
+**Name**: _Python Code Generation_
+**Objective**: _Generate and integrate various code components to build a coherent and functional project that performs basic arithmetic operations_
+**Generative Model**: _GPT_3_5_TURBO_
+
+\`\`\`json
+{
+  "cards": [
+    {
+      "title": "Main Template",
+      "objective": "Create the main template for the project.",
+      "prompt": "Generate the main template for the project, including the basic structure and necessary imports.",
+      "context": "This is the starting point for the project, setting up the basic structure and imports.",
+      "exampleOutput": "\`\`\`python\n# src/main.py\nif __name__ == '__main__':\n    pass\n\`\`\`",
+  "dependencies": []
+},
+{
+  "title": "Function to Calculate Sum",
+    "objective": "Add a function to calculate the sum of two numbers.",
+      "prompt": "Write a function to calculate the sum of two numbers and add it to main.py.",
+        "context": "This function will be part of the main.py file and will calculate the sum of two numbers.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\ndef calculate_sum(a, b):\n    return a + b\n\`\`\`",
+  "dependencies": ["Main Template"]
+},
+{
+  "title": "Function to Calculate Difference",
+    "objective": "Add a function to calculate the difference between two numbers.",
+      "prompt": "Write a function to calculate the difference between two numbers and add it to main.py.",
+        "context": "This function will be part of the main.py file and will calculate the difference between two numbers.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\ndef calculate_difference(a, b):\n    return a - b\n\`\`\`",
+            "dependencies": ["Main Template"]
+},
+{
+  "title": "Call Functions in Main",
+    "objective": "Call the previously created functions in the main template.",
+      "prompt": "Modify the main template to call the calculate_sum and calculate_difference functions.",
+        "context": "This step integrates the functions into the main template, demonstrating their use.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\ndef calculate_sum(a, b):\n    return a + b\n\ndef calculate_difference(a, b):\n    return a - b\n\nif __name__ == '__main__':\n    sum_result = calculate_sum(5, 3)\n    diff_result = calculate_difference(5, 3)\n    print(f'Sum: {sum_result}, Difference: {diff_result}')\n\`\`\`",
+            "dependencies": ["Function to Calculate Sum", "Function to Calculate Difference"]
+},
+{
+  "title": "Helper Function in Utility Module",
+    "objective": "Create a helper function in a utility module.",
+      "prompt": "Write a helper function to format results and add it to a new module, utility.py.",
+        "context": "This helper function will format the results and be used in the main template.",
+          "exampleOutput": "\`\`\`python\n# src/utility.py\ndef format_result(result):\n    return f'Result: {result}'\n\`\`\`",
+            "dependencies": []
+},
+{
+  "title": "Using Helper Function in Main",
+    "objective": "Use the helper function in the main template.",
+      "prompt": "Modify the main template to use the helper function from the utility module.",
+        "context": "This step integrates the helper function into the main template for better output formatting.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\nfrom utility import format_result\n\ndef calculate_sum(a, b):\n    return a + b\n\ndef calculate_difference(a, b):\n    return a - b\n\nif __name__ == '__main__':\n    sum_result = calculate_sum(5, 3)\n    diff_result = calculate_difference(5, 3)\n    formatted_sum = format_result(sum_result)\n    formatted_diff = format_result(diff_result)\n    print(formatted_sum)\n    print(formatted_diff)\n\`\`\`",
+            "dependencies": ["Call Functions in Main", "Helper Function in Utility Module"]
+},
+{
+  "title": "Check for Consistency",
+    "objective": "Ensure consistency across all modules and functions.",
+      "prompt": "Check the project to ensure that all modules and functions are consistent in their usage and naming conventions.",
+        "context": "Consistency across modules and functions is essential for maintainability and readability.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\nfrom utility import format_result\n\ndef calculate_sum(a, b):\n    return a + b\n\ndef calculate_difference(a, b):\n    return a - b\n\nif __name__ == '__main__':\n    sum_result = calculate_sum(5, 3)\n    diff_result = calculate_difference(5, 3)\n    formatted_sum = format_result(sum_result)\n    formatted_diff = format_result(diff_result)\n    print(formatted_sum)\n    print(formatted_diff)\n\n# src/utility.py\ndef format_result(result):\n    return f'Result: {result}'\n\`\`\`",
+            "dependencies": ["Using Helper Function in Main"]
+},
+{
+  "title": "Check for Errors",
+    "objective": "Ensure that the code is free of syntax and runtime errors.",
+      "prompt": "Run tests and checks to ensure that the code is free of syntax and runtime errors.",
+        "context": "Testing and error checking are crucial steps to ensure the code runs smoothly without issues.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\nfrom utility import format_result\n\ndef calculate_sum(a, b):\n    return a + b\n\ndef calculate_difference(a, b):\n    return a - b\n\nif __name__ == '__main__':\n    sum_result = calculate_sum(5, 3)\n    diff_result = calculate_difference(5, 3)\n    formatted_sum = format_result(sum_result)\n    formatted_diff = format_result(diff_result)\n    print(formatted_sum)\n    print(formatted_diff)\n\n# src/utility.py\ndef format_result(result):\n    return f'Result: {result}'\n\`\`\`",
+            "dependencies": ["Check for Consistency"]
+},
+{
+  "title": "Ensure Correct Formatting",
+    "objective": "Format the code according to standard coding conventions.",
+      "prompt": "Ensure that the code is formatted correctly according to PEP 8 standards or the relevant coding style guide.",
+        "context": "Proper code formatting improves readability and maintainability.",
+          "exampleOutput": "\`\`\`python\n# src/main.py\nfrom utility import format_result\n\ndef calculate_sum(a, b):\n    return a + b\n\ndef calculate_difference(a, b):\n    return a - b\n\nif __name__ == '__main__':\n    sum_result = calculate_sum(5, 3)\n    diff_result = calculate_difference(5, 3)\n    formatted_sum = format_result(sum_result)\n    formatted_diff = format_result(diff_result)\n    print(formatted_sum)\n    print(formatted_diff)\n\n# src/utility.py\ndef format_result(result):\n    return f'Result: {result}'\n\`\`\`",
+            "dependencies": ["Check for Errors"]
+}
+  ]
+}
+\`\`\`
+
 Generate the cards based on the given title and objective:
 
 **Name**: _${name}_  
@@ -287,5 +369,5 @@ Generate the cards based on the given title and objective:
 **Generative Model**: _${generativeModel}_
 
     `;
-    return cardSequencePrompt.trim();
+  return cardSequencePrompt.trim();
 }
