@@ -1,6 +1,10 @@
-# ComposableGenAi
+# PromptDeck
 
-ComposableGenAi is a project designed to utilize generative AIs for general tasks. This repository contains both the backend and frontend components.
+- **Prompt**: Indicates the focus on creating and managing prompts for generative AI.
+- **Deck**: Suggests a collection of cards, each representing a portion of the workflow, emphasizing the modular and organized approach of the platform.
+
+The **PromptDeck** platform has the goal of simplifying the process of prompt engineering through an easy-to-use, card-based interface.
+**PromptDeck**  is a project designed to utilize generative AIs for general tasks. This repository contains both the backend and frontend components.
 
 ## Table of Contents
 
@@ -17,7 +21,7 @@ ComposableGenAi is a project designed to utilize generative AIs for general task
 
 ```
 
-ComposableGenAi/
+PromptDeck /
 ├── backend/
 │ ├── src/
 │ ├── package.json
@@ -48,7 +52,7 @@ ComposableGenAi/
    - Open Visual Studio Code.
    - Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
    - Type `Git: Clone` and select `Git: Clone`.
-   - Enter the repository URL: `https://github.com/antbucc/ComposableGenAI`.
+   - Enter the repository URL: `https://github.com/antbucc/PromptDeck`.
    - Select the local directory where you want to clone the repository.
    - Open the cloned repository in Visual Studio Code.
 
