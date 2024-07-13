@@ -1,46 +1,30 @@
 {
-    "project": "PromptDeck",
-    "plugins": {
-      "postgresql": {
-        "database": "promptdeck_db"
-      }
-    },
-    "environments": {
-      "production": {
-        "domains": [
-          "promptdeck.example.com"
-        ],
-        "variables": {
-          "FRONTEND_URL": "https://promptdeck.example.com"
-        }
-      }
-    },
     "services": [
-      {
-        "name": "backend",
-        "source": {
-          "type": "dockerfile",
-          "dockerfilePath": "backend/Dockerfile",
-          "buildContext": "backend"
-        },
-        "env": {
-          "DATABASE_URL": "${{ postgres.connection_string }}",
-          "PORT": "5000"
-        }
+    {
+      "name": "backend",
+      "source": {
+        "type": "dockerfile",
+        "dockerfilePath": "backend/Dockerfile",
+        "buildContext": "backend"
       },
-      {
-        "name": "frontend",
-        "source": {
-          "type": "buildpack",
-          "buildCommand": "npm run build",
-          "startCommand": "npm start",
-          "buildContext": "frontend"
-        },
-        "env": {
-          "REACT_APP_BACKEND_URL": "${{ production.variables.FRONTEND_URL }}",
-          "PORT": "3000"
-        }
+      "env": {
+        "DATABASE_URL": "${{ DATABASE_URL }}",
+        "PORT": "5000"
       }
-    ]
-  }
+    },
+    {
+      "name": "frontend",
+      "source": {
+        "type": "nixpacks",
+        "buildContext": "frontend",
+        "buildCommand": "npm install && npm run build",
+        "startCommand": "npm start"
+      },
+      "env": {
+        "REACT_APP_BACKEND_URL": "${{ production.variables.REACT_APP_BACKEND_URL }}",
+        "PORT": "3000"
+      }
+    }
+  ]
+}
   
