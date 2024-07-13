@@ -1,24 +1,44 @@
 {
+    "project": "PromptDeck",
+    "plugins": {
+      "postgresql": {
+        "database": "promptdeck_db"
+      }
+    },
+    "environments": {
+      "production": {
+        "domains": [
+          "promptdeck.example.com"
+        ],
+        "variables": {
+          "FRONTEND_URL": "https://promptdeck.example.com"
+        }
+      }
+    },
     "services": [
       {
         "name": "backend",
-        "build": {
-          "context": "./backend",
-          "dockerfile": "Dockerfile"
+        "source": {
+          "type": "dockerfile",
+          "dockerfilePath": "backend/Dockerfile",
+          "buildContext": "backend"
         },
-        "envVars": {
-          "PORT": "3000"
+        "env": {
+          "DATABASE_URL": "${{ postgres.connection_string }}",
+          "PORT": "5000"
         }
       },
       {
         "name": "frontend",
-        "buildCommand": "npm install && npm run build",
-        "startCommand": "serve -s build",
-        "build": {
-          "context": "./frontend"
+        "source": {
+          "type": "buildpack",
+          "buildCommand": "npm run build",
+          "startCommand": "npm start",
+          "buildContext": "frontend"
         },
-        "static": {
-          "public": "build"
+        "env": {
+          "REACT_APP_BACKEND_URL": "${{ production.variables.FRONTEND_URL }}",
+          "PORT": "3000"
         }
       }
     ]
