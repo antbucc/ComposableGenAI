@@ -1,28 +1,18 @@
 {
-    "services": [
+   "services": [
     {
       "name": "backend",
       "source": {
         "type": "dockerfile",
         "dockerfilePath": "backend/Dockerfile",
         "buildContext": "backend"
-      },
-      "env": {
-        "DATABASE_URL": "${{ DATABASE_URL }}",
-        "PORT": "5000"
       }
     },
     {
       "name": "frontend",
       "source": {
         "type": "nixpacks",
-        "buildContext": "frontend",
-        "buildCommand": "npm install && npm run build",
-        "startCommand": "npm start"
-      },
-      "env": {
-        "REACT_APP_BACKEND_URL": "${{ production.variables.REACT_APP_BACKEND_URL }}",
-        "PORT": "3000"
+        "buildContext": "frontend"
       }
     }
   ]
