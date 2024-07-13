@@ -179,6 +179,9 @@ You are an advanced AI designed to generate a sequence of interconnected cards. 
 
 Generate the cards based on the following task:
 
+**Name**: _Research and Summarize the Impact of the Renaissance on Modern Science_
+**Objective**: _To explore and summarize how the Renaissance period influenced the development of modern scientific thought and practices._
+**Generative Model**: _GPT_3_5_TURBO_
 
 \`\`\`json
 {
