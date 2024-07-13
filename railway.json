@@ -1,0 +1,26 @@
+{
+    "services": [
+      {
+        "name": "backend",
+        "build": {
+          "context": "./backend",
+          "dockerfile": "Dockerfile"
+        },
+        "envVars": {
+          "PORT": "3000"
+        }
+      },
+      {
+        "name": "frontend",
+        "buildCommand": "npm install && npm run build",
+        "startCommand": "serve -s build",
+        "build": {
+          "context": "./frontend"
+        },
+        "static": {
+          "public": "build"
+        }
+      }
+    ]
+  }
+  
