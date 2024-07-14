@@ -184,7 +184,7 @@ const TaskDetailPage: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   function closeInstructions(): void {
-    throw new Error('Function not implemented.');
+    setShowInstructions(false);
   }
 
   return (
