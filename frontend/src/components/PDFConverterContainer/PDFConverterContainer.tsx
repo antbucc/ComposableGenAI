@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Button, SelectContainer, SelectLabel, Select } from './PDFConverterContainer.styles';
+import { Button, SelectContainer, SelectLabel, Select, ContentContainer } from './PDFConverterContainer.styles';
 import { marked } from 'marked';
 
 interface PDFConverterContainerProps {
@@ -10,16 +10,27 @@ interface PDFConverterContainerProps {
 
 const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) => {
   const [baseFontSize, setBaseFontSize] = useState(12);
+  const [htmlContent, setHtmlContent] = useState<string>('');
 
   const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setBaseFontSize(Number(event.target.value));
   };
 
+  useEffect(() => {
+    const fetchContent = async () => {
+      const markdownText = card.output.generatedText || 'No output generated';
+      const parsedHtml = await marked.parse(markdownText);
+      setHtmlContent(parsedHtml);
+    };
+
+    fetchContent();
+  }, [card]);
+
   const handleDownloadPDF = async () => {
     const markdownText = card.output.generatedText || 'No output generated';
 
     // Convert markdown to HTML
-    const htmlContent: string = await Promise.resolve(marked.parse(markdownText));
+    const htmlContent: string = await marked.parse(markdownText);
 
     // Define custom styles with proportional font sizes
     const styles = `
@@ -86,6 +97,7 @@ const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) =
         </Select>
       </SelectContainer>
       <Button onClick={handleDownloadPDF}>Download PDF</Button>
+      <ContentContainer baseFontSize={baseFontSize} dangerouslySetInnerHTML={{ __html: htmlContent }} />
     </div>
   );
 };

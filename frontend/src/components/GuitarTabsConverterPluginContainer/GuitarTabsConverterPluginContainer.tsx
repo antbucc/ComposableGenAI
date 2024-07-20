@@ -17,7 +17,7 @@ import {
   ToggleButton,
   InfoLabel
 } from './GuitarTabsConverterPluginContainer.styles';
-import { playIcon, pauseIcon, downloadIcon, executeDownIcon, copyIcon, doneIcon } from '../../assets';
+import { playIcon, pauseIcon, downloadIcon, executeDownIcon } from '../../assets';
 import { MUSIC_INSTRUMENTS } from '../../config/config';
 
 interface GuitarTabsConverterContainerProps {
@@ -40,7 +40,6 @@ const GuitarTabsConverterContainer: React.FC<GuitarTabsConverterContainerProps> 
   const [instrument, setInstrument] = useState<string>(MUSIC_INSTRUMENTS[0]);
   const [files, setFiles] = useState<PluginFile[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean[]>([]);
-  const [isCopying, setIsCopying] = useState(false);
   const [isMarkdown, setIsMarkdown] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement>(null);
 
@@ -84,16 +83,6 @@ const GuitarTabsConverterContainer: React.FC<GuitarTabsConverterContainerProps> 
       setIsPlaying((prev) =>
         prev.map((playing, i) => (i === index ? !playing : playing))
       );
-    }
-  };
-
-  const handleCopyClick = async () => {
-    try {
-      await navigator.clipboard.writeText(card.output.generatedText);
-      setIsCopying(true);
-      setTimeout(() => setIsCopying(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy text:', error);
     }
   };
 
