@@ -13,3 +13,19 @@ export const Button = styled.button`
     background-color: #e08e0b;
   }
 `;
+
+export const SelectContainer = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const SelectLabel = styled.label`
+  font-size: 16px;
+  margin-right: 10px;
+`;
+
+export const Select = styled.select`
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;

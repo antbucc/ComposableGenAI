@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { jsPDF } from 'jspdf';
-import { Button } from './PDFConverterContainer.styles';
+import html2canvas from 'html2canvas';
+import { Button, SelectContainer, SelectLabel, Select } from './PDFConverterContainer.styles';
 import { marked } from 'marked';
 
 interface PDFConverterContainerProps {
@@ -8,22 +9,32 @@ interface PDFConverterContainerProps {
 }
 
 const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) => {
+  const [baseFontSize, setBaseFontSize] = useState(12);
+
+  const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setBaseFontSize(Number(event.target.value));
+  };
+
   const handleDownloadPDF = async () => {
-    const doc = new jsPDF('p', 'pt', 'a4'); // 'p' for portrait, 'pt' for point units, 'a4' for size
     const markdownText = card.output.generatedText || 'No output generated';
 
     // Convert markdown to HTML
-     const htmlContent: string = await Promise.resolve(marked.parse(markdownText));
+    const htmlContent: string = await Promise.resolve(marked.parse(markdownText));
 
-    // Define custom styles
+    // Define custom styles with proportional font sizes
     const styles = `
       <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1, h2, h3, h4, h5, h6 { margin: 20px 0 10px 0; }
-        p { margin: 10px 0; font-size: 12pt; line-height: 1.6; }
-        ul, ol { margin: 10px 0; padding-left: 20px; }
-        blockquote { margin: 10px 0; padding-left: 10px; border-left: 5px solid #ccc; font-size: 12pt; }
-        pre { background-color: #f6f6f6; padding: 10px; border-radius: 5px; font-size: 10pt; }
+        body { font-family: 'Times New Roman', serif; margin: 20px; font-size: ${baseFontSize}pt; }
+        h1 { margin: 20px 0 10px 0; font-size: ${2 * baseFontSize}pt; }
+        h2 { margin: 20px 0 10px 0; font-size: ${1.75 * baseFontSize}pt; }
+        h3 { margin: 20px 0 10px 0; font-size: ${1.5 * baseFontSize}pt; }
+        h4 { margin: 20px 0 10px 0; font-size: ${1.25 * baseFontSize}pt; }
+        h5 { margin: 20px 0 10px 0; font-size: ${1.1 * baseFontSize}pt; }
+        h6 { margin: 20px 0 10px 0; font-size: ${1 * baseFontSize}pt; }
+        p { margin: 10px 0; font-size: ${1 * baseFontSize}pt; line-height: 1.6; }
+        ul, ol { margin: 10px 0; padding-left: 20px; font-size: ${1 * baseFontSize}pt; }
+        blockquote { margin: 10px 0; padding-left: 10px; border-left: 5px solid #ccc; font-size: ${1 * baseFontSize}pt; }
+        pre { background-color: #f6f6f6; padding: 10px; border-radius: 5px; font-size: ${0.8 * baseFontSize}pt; }
         .markdown-body { max-width: 100%; word-wrap: break-word; white-space: pre-wrap; }
       </style>
     `;
@@ -42,21 +53,38 @@ const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) =
     // Create a container to hold the styled content
     const container = document.createElement('div');
     container.innerHTML = styledContent;
+    document.body.appendChild(container);
 
-    // Use jsPDF html method to render the styled HTML content
-    doc.html(container, {
-      callback: function (doc) {
-        doc.save(`${card.title}.pdf`);
-      },
-      x: 40,
-      y: 40,
-      width: 515, // Set the width to fit the content within the A4 page
-      windowWidth: 800 // Use this to simulate a larger window for proper formatting
+    // Use html2canvas to capture the content and jsPDF to create the PDF
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const doc = new jsPDF('p', 'pt', 'a4');
+      const imgProps = doc.getImageProperties(imgData);
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * (pdfWidth - 40)) / imgProps.width; // Adjust height to maintain aspect ratio
+
+      const x = 20; // Padding on the left and right
+      const y = 20; // Padding on the top
+
+      doc.addImage(imgData, 'PNG', x, y, pdfWidth - 40, pdfHeight); // Subtract padding from width
+      doc.save(`${card.title}.pdf`);
+      document.body.removeChild(container); // Clean up
     });
   };
 
   return (
     <div>
+      <SelectContainer>
+        <SelectLabel htmlFor="fontSizeSelector">Font Size: </SelectLabel>
+        <Select id="fontSizeSelector" onChange={handleFontSizeChange} value={baseFontSize}>
+          <option value="10">10pt</option>
+          <option value="12">12pt</option>
+          <option value="14">14pt</option>
+          <option value="16">16pt</option>
+          <option value="18">18pt</option>
+          <option value="20">20pt</option>
+        </Select>
+      </SelectContainer>
       <Button onClick={handleDownloadPDF}>Download PDF</Button>
     </div>
   );
