@@ -323,3 +323,40 @@ export const deleteAllTasks = async (req: Request, res: Response, next: NextFunc
         next(err);
     }
 };
+
+export const exportTask = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    try {
+        const task = await TaskModel.findById(new Types.ObjectId(id)).populate('milestones cards');
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        // Retrieve associated cards
+        const cards = await CardModel.find({ _id: { $in: task.cards } });
+
+        // Format the response
+        const exportedTask = {
+            name: task.name,
+            objective: task.objective,
+            milestones: task.milestones.map(milestone => milestone.toHexString()),
+            importedCards: await Promise.all(cards.map(async card => ({
+                title: card.title,
+                objective: card.objective,
+                prompt: card.prompt,
+                context: card.context,
+                exampleOutput: card.exampleOutput,
+                dependencies: await Promise.all(card.previousCards.map(async prevCardId => {
+                    const prevCard = await CardModel.findById(prevCardId);
+                    return prevCard ? prevCard.title : null;
+                })).then(dependencies => dependencies.filter(dep => dep !== null)),
+                generativeModel: card.generativeModel || undefined
+            })))
+        };
+
+        return res.status(200).json(exportedTask);
+    } catch (err) {
+        next(err);
+    }
+};

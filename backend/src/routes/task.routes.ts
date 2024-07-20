@@ -12,7 +12,8 @@ import {
     deleteTask,
     getTaskMilestones,
     getTaskCards,
-    deleteAllTasks
+    deleteAllTasks,
+    exportTask
 } from '../controllers/task.controllers';
 import checkAuth from '../middlewares/auth.middleware';
 
@@ -30,5 +31,6 @@ router.post('/:id/cards', checkAuth, addCardsToTask);
 router.delete('/:id/milestones', checkAuth, removeMilestonesFromTask);
 router.delete('/:id/cards', checkAuth, removeCardsFromTask);
 router.delete('/', checkAuth, deleteAllTasks);
+router.get('/:id/export', exportTask);
 
 export default router;
