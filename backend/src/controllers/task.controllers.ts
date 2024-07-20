@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { TaskModel } from '../models/task.models';
 import { CardModel, ICard } from '../models/card.models';
 import { MilestoneModel } from '../models/milestone.models';
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { generateTask } from '../services/task.services';
 
 interface CreateTaskBody {
@@ -13,10 +13,19 @@ interface CreateTaskBody {
     cards?: string[];
     generate?: boolean;
     generativeModel?: string;
+    importedCards?: {
+        title: string;
+        objective: string;
+        prompt: string;
+        context: string;
+        exampleOutput: string;
+        dependencies: string[];
+        generativeModel?: string;
+    }[];
 }
 
 export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Response, next: NextFunction) => {
-    const { name, objective, milestones = [], cards = [], generate = false, generativeModel } = req.body;
+    const { name, objective, milestones = [], cards = [], generate = false, generativeModel, importedCards = [] } = req.body;
 
     try {
         // Create the new task in the database
@@ -27,8 +36,49 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
             cards: cards.map(id => new Types.ObjectId(id)),
         });
 
+        const cardIds: Types.ObjectId[] = [];
+        const cardMap: { [key: string]: ICard } = {};
+
+        // Handle predefined cards
+        if (importedCards.length > 0) {
+            for (const card of importedCards) {
+                const exampleOutput = Array.isArray(card.exampleOutput)
+                    ? card.exampleOutput.join(' ')
+                    : card.exampleOutput;
+
+                const newCard = await CardModel.create({
+                    title: card.title,
+                    objective: card.objective,
+                    prompt: card.prompt,
+                    generativeModel: card.generativeModel || generativeModel || null,
+                    context: card.context,
+                    exampleOutput,
+                    previousCards: [],
+                    nextCards: [],
+                    output: null,
+                    executed: false,
+                    evaluated: false,
+                    inconsistent: false,
+                    plugins: [],
+                });
+                cardIds.push(newCard._id);
+                cardMap[card.title] = newCard;
+            }
+
+            // Link cards based on dependencies
+            for (const card of importedCards) {
+                const currentCard = cardMap[card.title];
+                for (const dependency of card.dependencies) {
+                    const dependentCard = cardMap[dependency];
+                    if (dependentCard) {
+                        await currentCard.linkCard(dependentCard._id, 'previous');
+                    }
+                }
+            }
+        }
+
+        // Handle generated cards
         if (generate && generativeModel) {
-            // Call the generateTask function if generate is true
             const generatedData = await generateTask(newTask, generativeModel);
             const generatedCards = generatedData.cards;
 
@@ -36,10 +86,6 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
                 throw new Error("Invalid generated cards format");
             }
 
-            const cardIds: Types.ObjectId[] = [];
-            const cardMap: { [key: string]: ICard } = {};
-
-            // Create and save all the generated cards
             for (const card of generatedCards) {
                 const exampleOutput = Array.isArray(card.exampleOutput)
                     ? card.exampleOutput.join(' ')
@@ -64,7 +110,6 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
                 cardMap[card.title] = newCard;
             }
 
-            // Link cards based on dependencies
             for (const card of generatedCards) {
                 const currentCard = cardMap[card.title];
                 for (const dependency of card.dependencies) {
@@ -74,11 +119,11 @@ export const createTask = async (req: Request<{}, any, CreateTaskBody>, res: Res
                     }
                 }
             }
-
-            // Add generated cards to the task
-            newTask.cards.push(...cardIds);
-            await newTask.save();
         }
+
+        // Add cards to the task
+        newTask.cards.push(...cardIds);
+        await newTask.save();
 
         return res.status(201).json(newTask);
     } catch (err) {

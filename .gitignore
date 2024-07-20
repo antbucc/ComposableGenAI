@@ -20,7 +20,8 @@
 
 /backend/src/plugins/guitar-tabs-converter/__pycache__
 
-
+#build 
+/frontend/build
 # misc
 .DS_Store
 .env.local
