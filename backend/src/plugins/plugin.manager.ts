@@ -1,6 +1,7 @@
 import { PluginInterface } from './plugin.interface';
 import { GuitarTabsConverterPlugin } from './guitar-tabs-converter/guitar-tabs-converter.plugin';
 import { ABCConverterPlugin } from './abc-converter/abc-converter.plugin';
+import { PDFConverterPlugin } from './pdf-converter/pdf-converter.plugins';
 
 interface PluginRegistry {
     [key: string]: PluginInterface;
@@ -9,7 +10,7 @@ interface PluginRegistry {
 const plugins: PluginRegistry = {
     'guitar-tabs-converter': new GuitarTabsConverterPlugin(),
     'abc-converter': new ABCConverterPlugin(),
-    // Add other plugins here as they are created
+    'pdf-converter': new PDFConverterPlugin(),
 };
 
 export class PluginManager {

@@ -21,6 +21,8 @@
     "dagre": "^0.8.5",
     "eslint": "^8.57.0",
     "jest": "^27.5.1",
+    "jspdf": "^2.5.1",
+    "marked": "^13.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
