@@ -14,14 +14,6 @@ interface PDFConverterContainerProps {
 
 const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) => {
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      // No fetch needed since the content is coming from the card prop
-    };
-
-    fetchContent();
-  }, [card]);
-
   const handleDownloadPDF = async () => {
     const markdownText = card.output.generatedText || 'No output generated';
     const htmlContent: string = await marked.parse(markdownText);
@@ -35,7 +27,7 @@ const PDFConverterContainer: React.FC<PDFConverterContainerProps> = ({ card }) =
     };
 
     // Create and download the PDF
-    pdfMake.createPdf(docDefinition).download('download.pdf');
+    pdfMake.createPdf(docDefinition).download(card.title);
   };
 
   return (
