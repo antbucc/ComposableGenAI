@@ -408,3 +408,46 @@ export const removePluginFromCard = async (req: Request<{ id: string }>, res: Re
         next(err);
     }
 };
+
+export const updateCardOutput = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { generatedText } = req.body;
+
+    try {
+        const card = await CardModel.findById(id).populate('output').exec();
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        let executionData;
+        if (card.output) {
+            // Update existing execution data
+            executionData = await ExecutionDataModel.findById(card.output._id);
+            if (!executionData) {
+                return res.status(404).json({ message: 'Execution Data not found' });
+            }
+            executionData.generatedText = generatedText;
+            // Remove evaluation metrics
+            executionData.evaluationMetrics = [];
+        } else {
+            // Create new execution data
+            executionData = new ExecutionDataModel({
+                generatedText,
+                evaluationMetrics: [],
+            });
+            await executionData.save();
+
+            card.output = executionData._id;
+        }
+
+        // Set card.evaluated to false
+        card.evaluated = false;
+
+        await executionData.save();
+        await card.save();
+
+        return res.status(200).json({ message: 'Card output updated successfully', executionData });
+    } catch (err) {
+        next(err);
+    }
+};

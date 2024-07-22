@@ -16,7 +16,8 @@ import {
     getPreviousCardsOutputsController,
     updateCard,
     addPluginToCard,
-    removePluginFromCard
+    removePluginFromCard,
+    updateCardOutput
 } from '../controllers/card.controllers';
 import checkAuth from '../middlewares/auth.middleware';
 
@@ -37,6 +38,7 @@ router.put('/remove-previous/:currentCardId', checkAuth, removePreviousCard);
 router.get('/previous-cards-outputs/:id', checkAuth, getPreviousCardsOutputsController);
 router.put('/:id', checkAuth, updateCard);
 router.put('/:id/plugin', checkAuth, addPluginToCard); // Updated to support multiple plugins
-router.put('/:id/remove-plugin', checkAuth, removePluginFromCard); // New route
+router.delete('/:id/plugin', checkAuth, removePluginFromCard); // New route
+router.put('/:id/output', checkAuth, updateCardOutput);
 
 export default router;

@@ -107,6 +107,16 @@ export const updateCard = async (card: any) => {
     }
 };
 
+export const updateCardOutput = async (cardId: string, output: any) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/${cardId}/output`, output);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating card output:', error);
+        throw error;
+    }
+}
+
 export const createTask = async (task: any) => {
     try {
         const response = await axios.post(`${API_URL}/tasks`, task);

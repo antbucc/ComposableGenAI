@@ -25,7 +25,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ title, onRequestClose, conten
       case 'guitar-tabs-converter':
         return <GuitarTabsConverterContainer card={card} />;
       case 'output-detail':
-        return <OutputDetailContainer output={card.output.generatedText} />;
+        return <OutputDetailContainer card={card} />
         case 'abc-converter':
         return <ABCConverterContainer card={card} />;
         case 'pdf-converter':
