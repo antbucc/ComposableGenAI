@@ -132,7 +132,6 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         defaultZoom={0.8}
         nodeTypes={nodeTypes}
       >
-        <MiniMap />
         <Controls />
         <Background />
       </ReactFlow>

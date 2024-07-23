@@ -232,16 +232,16 @@ export const getTask = async (req: Request<{ id: string }>, res: Response, next:
 
 export const updateTask = async (req: Request<{ id: string }, any, CreateTaskBody>, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { name, objective, milestones = [], cards = [] } = req.body;
+    const { name, objective, milestones, cards } = req.body;
 
     try {
-        const updatedTask = await TaskModel.findByIdAndUpdate(id, {
-            name,
-            objective,
-            milestones: milestones.map(id => new Types.ObjectId(id)),
-            cards: cards.map(id => new Types.ObjectId(id)),
+        const updateData: any = {};
+        if (name !== undefined) updateData.name = name;
+        if (objective !== undefined) updateData.objective = objective;
+        if (milestones !== undefined) updateData.milestones = milestones.map(id => new Types.ObjectId(id));
+        if (cards !== undefined) updateData.cards = cards.map(id => new Types.ObjectId(id));
 
-        }, { new: true });
+        const updatedTask = await TaskModel.findByIdAndUpdate(id, updateData, { new: true });
 
         if (!updatedTask) {
             return res.status(404).json({ message: 'Task not found' });

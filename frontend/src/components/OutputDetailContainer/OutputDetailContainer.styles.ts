@@ -75,3 +75,15 @@ export const InfoLabel = styled.p`
 export const EditButton = styled(CopyButton)``;
 
 export const SaveButton = styled(CopyButton)``;
+
+export const TextArea = styled.textarea`
+  flex: 1; /* Allow the textarea to grow and fill the remaining space */
+  resize: none; /* Disable resizing */
+  border: 2px solid #333;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  height: calc(70vh - 100px);
+`;

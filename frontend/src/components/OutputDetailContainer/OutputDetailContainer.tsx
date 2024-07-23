@@ -9,7 +9,8 @@ import {
   InfoLabel, 
   ButtonContainer,
   EditButton,
-  SaveButton 
+  SaveButton,
+  TextArea // Import the TextArea component
 } from './OutputDetailContainer.styles';
 import { copyIcon, doneIcon, editIcon } from '../../assets';
 
@@ -79,7 +80,7 @@ const OutputDetailContainer: React.FC<OutputDetailContainerProps> = ({ card }) =
         </ToggleButton>
       </ToggleContainer>
       {isEditing ? (
-        <textarea value={editedOutput} onChange={handleChange} />
+        <TextArea value={editedOutput} onChange={handleChange} />
       ) : (
         isMarkdown ? <ReactMarkdown>{output}</ReactMarkdown> : <pre>{output}</pre>
       )}
